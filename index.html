@@ -383,9 +383,9 @@ footer a{color:#e8613c;text-decoration:none}
 <body>
 
 <section class="hero">
-  <div class="hero-badge">source: cli.js &middot; 176 words + 8 easter eggs</div>
+  <div class="hero-badge">source: cli.js v2.1.79 &middot; 190 words + 11 retired</div>
   <h1>Claude Code's <span class="hl">Secret Words</span></h1>
-  <p>When Claude thinks, it picks from <em>176 delightful words</em>. Tap to explore each one.</p>
+  <p>When Claude thinks, it picks from <em>188 delightful words</em>. Tap to explore each one.</p>
 </section>
 
 <div class="controls">
@@ -399,7 +399,7 @@ footer a{color:#e8613c;text-decoration:none}
   </div>
   <button class="btn btn-spin" onclick="spin()">Spin</button>
   <div class="counter" id="ctr">
-    <span class="c-num" id="cNum">0</span>/<span>184</span>
+    <span class="c-num" id="cNum">0</span>/<span>201</span>
     <div class="c-bar"><div class="c-fill" id="cFill"></div></div>
     <span class="trophy">🏆</span>
   </div>
@@ -444,7 +444,7 @@ footer a{color:#e8613c;text-decoration:none}
     <input type="text" id="sIn" placeholder="Search English or Chinese..." autocomplete="off">
     <button class="s-close" id="sCl">ESC</button>
   </div>
-  <div class="s-count" id="sCt">176 words across 9 categories</div>
+  <div class="s-count" id="sCt">201 words across 10 categories</div>
   <div class="s-results" id="sRe"></div>
 </div>
 
@@ -459,8 +459,9 @@ const E={
 'Crafting':'\u2692\uFE0F','Creating':'\u{1F3A8}','Composing':'\u{1F3B5}','Computing':'\u{1F4BB}','Forging':'\u{1F528}','Forming':'\u{1FAB5}','Generating':'\u2699\uFE0F','Architecting':'\u{1F3D7}','Bootstrapping':'\u{1F462}','Hashing':'\u{1F523}','Hatching':'\u{1F423}','Improvising':'\u{1F3B7}','Incubating':'\u{1FABA}','Orchestrating':'\u{1F3BC}','Sketching':'\u270F\uFE0F','Tinkering':'\u{1F529}','Accomplishing':'\u2705','Actioning':'\u{1F3AC}','Actualizing':'\u{1F3C6}','Effecting':'\u{1F4A2}','Gitifying':'\u{1F333}',
 'Cascading':'\u{1F4A6}','Coalescing':'\u{1F300}','Spinning':'\u{1F3A1}','Swirling':'\u{1F32A}','Twisting':'\u{1F500}','Undulating':'\u3030\uFE0F','Unfurling':'\u{1F3F3}','Unravelling':'\u{1F9F5}','Whirlpooling':'\u{1FAE7}','Whirring':'\u{1F4BF}','Zigzagging':'\u303D\uFE0F','Channeling':'\u{1F4E1}','Channelling':'\u{1F4E1}','Fluttering':'\u{1F98B}','Infusing':'\u{1FAD6}','Reticulating':'\u{1F578}','Billowing':'\u{1F30B}',
 'Doing':'\u270B','Working':'\u{1F4BC}','Processing':'\u{1F504}','Vibing':'\u{1F60E}','Wandering':'\u{1F6B6}','Doodling':'\u{1F58D}','Embellishing':'\u{1F380}','Harmonizing':'\u{1F3B9}','Herding':'\u{1F411}','Gesticulating':'\u{1F44B}','Mustering':'\u{1F4AA}','Newspapering':'\u{1F4F0}','Noodling':'\u{1F35C}','Philosophising':'\u{1F9D4}','Pontificating':'\u{1F4DC}','Puttering':'\u{1F3E1}','Wrangling':'\u{1FA22}',
-'Crunched':'\u{1F4A5}',
-'Baked':'\u{1F35E}','Brewed':'\u2615','Churned':'\u{1F9C8}','Cogitated':'\u{1F9E0}','Cooked':'\u{1F373}','Saut\u00E9ed':'\u{1F958}','Worked':'\u{1F4BC}'
+'Antialiasing':'\u{1F5BC}','Ascending':'\u{1FA9C}','Bunning':'\u{1F32D}','Choreographing':'\u{1FA70}','Churning':'\u{1FAD9}','Crunching':'\u{1F9B7}','Dithering':'\u{1FAE8}','Finagling':'\u{1F90C}','Interleaving':'\u{1FAA1}','Metamorphosing':'\u{1F99A}','Percolating':'\u{1FAD7}','Pivoting':'\u{1F501}','Pruning':'\u2702\uFE0F','Roaming':'\u{1F5FA}','Symbioting':'\u{1FAB8}',
+'Saut\u00E9ing':'\u{1F958}','Flamb\u00E9ing':'\u{1F525}','Thundering':'\u26C8\uFE0F',
+'Crunched':'\u{1F4A5}','Baked':'\u{1F35E}','Brewed':'\u2615','Churned':'\u{1F9C8}','Cogitated':'\u{1F9E0}','Cooked':'\u{1F373}','Saut\u00E9ed':'\u{1F958}','Worked':'\u{1F4BC}'
 };
 const Z={
 'Thinking':'\u601D\u8003\u4E2D','Pondering':'\u6C89\u601D\u4E2D','Contemplating':'\u51A5\u60F3\u4E2D','Considering':'\u659F\u914C\u4E2D','Deliberating':'\u6DF1\u601D\u719F\u8651\u4E2D','Cogitating':'\u82E6\u601D\u4E2D','Ruminating':'\u53CD\u520D\u4E2D','Musing':'\u9050\u60F3\u4E2D','Mulling':'\u7422\u78E8\u4E2D','Calculating':'\u8BA1\u7B97\u4E2D','Deciphering':'\u7834\u8BD1\u4E2D','Inferring':'\u63A8\u7406\u4E2D','Synthesizing':'\u7EFC\u5408\u4E2D','Determining':'\u5224\u5B9A\u4E2D','Elucidating':'\u9610\u660E\u4E2D','Cerebrating':'\u7528\u8111\u4E2D','Perusing':'\u7EC6\u8BFB\u4E2D','Puzzling':'\u89E3\u8C1C\u4E2D','Ideating':'\u6784\u601D\u4E2D','Imagining':'\u60F3\u8C61\u4E2D','Envisioning':'\u5C55\u671B\u4E2D',
@@ -472,6 +473,7 @@ const Z={
 'Crafting':'\u6253\u9020\u4E2D','Creating':'\u521B\u9020\u4E2D','Composing':'\u8C31\u5199\u4E2D','Computing':'\u8FD0\u7B97\u4E2D','Forging':'\u953B\u9020\u4E2D','Forming':'\u5851\u5F62\u4E2D','Generating':'\u751F\u6210\u4E2D','Architecting':'\u67B6\u6784\u4E2D','Bootstrapping':'\u81EA\u4E3E\u4E2D','Hashing':'\u54C8\u5E0C\u4E2D','Hatching':'\u5B75\u5316\u4E2D','Improvising':'\u5373\u5174\u53D1\u6325\u4E2D','Incubating':'\u5B75\u5316\u57F9\u80B2\u4E2D','Orchestrating':'\u7F16\u6392\u4E2D','Sketching':'\u7D20\u63CF\u4E2D','Tinkering':'\u6363\u9F13\u4E2D','Accomplishing':'\u641E\u5B9A\u4E2D','Actioning':'\u6267\u884C\u4E2D','Actualizing':'\u5B9E\u73B0\u4E2D','Effecting':'\u751F\u6548\u4E2D','Gitifying':'Git\u5316\u4E2D',
 'Cascading':'\u5C42\u53E0\u4E2D','Coalescing':'\u805A\u5408\u4E2D','Spinning':'\u65CB\u8F6C\u4E2D','Swirling':'\u6253\u65CB\u4E2D','Twisting':'\u626D\u66F2\u4E2D','Undulating':'\u8D77\u4F0F\u4E2D','Unfurling':'\u5C55\u5F00\u4E2D','Unravelling':'\u89E3\u5F00\u4E2D','Whirlpooling':'\u6F29\u6DA1\u4E2D','Whirring':'\u55E1\u55E1\u8F6C\u4E2D','Zigzagging':'\u66F2\u6298\u524D\u884C\u4E2D','Channeling':'\u5F15\u5BFC\u4E2D','Channelling':'\u5F15\u5BFC\u4E2D','Fluttering':'\u7FE9\u7FE9\u98DE\u821E\u4E2D','Infusing':'\u6CE8\u5165\u4E2D','Reticulating':'\u7F51\u683C\u5316\u4E2D','Billowing':'\u7FFB\u6D8C\u4E2D',
 'Doing':'\u505A\u4E8B\u4E2D','Working':'\u5DE5\u4F5C\u4E2D','Processing':'\u5904\u7406\u4E2D','Vibing':'\u611F\u53D7\u6C1B\u56F4\u4E2D','Wandering':'\u6F2B\u6E38\u4E2D','Doodling':'\u6D82\u9E26\u4E2D','Embellishing':'\u6DA6\u8272\u4E2D','Harmonizing':'\u548C\u8C10\u4E2D','Herding':'\u653E\u7267\u4E2D','Gesticulating':'\u6BD4\u624B\u753B\u811A\u4E2D','Mustering':'\u96C6\u7ED3\u4E2D','Newspapering':'\u770B\u62A5\u4E2D','Noodling':'\u778E\u7422\u78E8\u4E2D','Philosophising':'\u54F2\u5B66\u601D\u8FA8\u4E2D','Pontificating':'\u8BF4\u6559\u4E2D','Puttering':'\u78E8\u6D0B\u5DE5\u4E2D','Wrangling':'\u4E89\u8BBA\u4E2D',
+'Antialiasing':'抗锯齿中','Ascending':'攀升中','Bunning':'盘发中','Choreographing':'编舞中','Churning':'搅动中','Crunching':'运算中','Dithering':'犹豫中','Finagling':'巧周旋中','Interleaving':'交织中','Metamorphosing':'变形中','Percolating':'渗滤中','Pivoting':'转向中','Pruning':'剪枝中','Roaming':'漫游中','Symbioting':'共生中',
 'Crunched':'嘎嘣完了',
 'Baked':'烤好了','Brewed':'酿好了','Churned':'搅好了','Cogitated':'想好了','Cooked':'做好了','Saut\u00E9ed':'煎好了','Worked':'干完了'
 };
@@ -481,32 +483,32 @@ const D=[
    f:['Thinking','Pondering','Contemplating','Cogitating','Ruminating','Puzzling','Envisioning','Calculating'],
    w:['Thinking','Pondering','Contemplating','Considering','Deliberating','Cogitating','Ruminating','Musing','Mulling','Calculating','Deciphering','Inferring','Synthesizing','Determining','Elucidating','Cerebrating','Perusing','Puzzling','Ideating','Imagining','Envisioning']},
   {icon:'\u{1F373}',th:'accent',en:'Cooking Metaphors',zh:'\u70F9\u996A\u6BD4\u55BB',
-   f:['Simmering','Marinating','Fermenting','Flamb\u00E9ing','Whisking','Caramelizing','Julienning','Zesting'],
-   w:['Baking','Brewing','Cooking','Simmering','Stewing','Marinating','Fermenting','Seasoning','Kneading','Leavening','Caramelizing','Garnishing','Julienning','Saut\u00E9ing','Flamb\u00E9ing','Frosting','Drizzling','Whisking','Zesting','Proofing','Tempering','Blanching','Concocting']},
+   f:['Simmering','Marinating','Fermenting','Bunning','Whisking','Caramelizing','Churning','Zesting'],
+   w:['Baking','Brewing','Cooking','Simmering','Stewing','Marinating','Fermenting','Seasoning','Kneading','Leavening','Caramelizing','Garnishing','Julienning','Frosting','Drizzling','Whisking','Zesting','Proofing','Tempering','Blanching','Concocting','Bunning','Churning']},
   {icon:'\u{1F33F}',th:'teal',en:'Nature & Science',zh:'\u81EA\u7136\u4E0E\u79D1\u5B66',
-   f:['Photosynthesizing','Pollinating','Crystallizing','Sublimating','Osmosing','Thundering','Sprouting','Nebulizing'],
-   w:['Photosynthesizing','Pollinating','Sprouting','Germinating','Crystallizing','Evaporating','Ionizing','Nucleating','Osmosing','Precipitating','Sublimating','Propagating','Cultivating','Nebulizing','Nesting','Roosting','Bloviating','Flowing','Ebbing','Gusting','Misting','Thundering']},
+   f:['Photosynthesizing','Pollinating','Crystallizing','Sublimating','Osmosing','Symbioting','Sprouting','Metamorphosing'],
+   w:['Photosynthesizing','Pollinating','Sprouting','Germinating','Crystallizing','Evaporating','Ionizing','Nucleating','Osmosing','Precipitating','Sublimating','Propagating','Cultivating','Nebulizing','Nesting','Roosting','Bloviating','Flowing','Ebbing','Gusting','Misting','Metamorphosing','Percolating','Pruning','Symbioting']},
   {icon:'\u{1F483}',th:'amber',en:'Quirky Moves',zh:'\u641E\u602A\u52A8\u4F5C',
-   f:['Moonwalking','Waddling','Skedaddling','Galloping','Spelunking','Scampering','Slithering','Boogieing'],
-   w:['Moonwalking','Boogieing','Jitterbugging','Sock-hopping','Shimmying','Frolicking','Gallivanting','Waddling','Scampering','Schlepping','Skedaddling','Grooving','Meandering','Moseying','Perambulating','Galloping','Scurrying','Slithering','Pouncing','Burrowing','Spelunking','Honking']},
+   f:['Moonwalking','Waddling','Skedaddling','Galloping','Spelunking','Choreographing','Roaming','Boogieing'],
+   w:['Moonwalking','Boogieing','Jitterbugging','Sock-hopping','Shimmying','Frolicking','Gallivanting','Waddling','Scampering','Schlepping','Skedaddling','Grooving','Meandering','Moseying','Perambulating','Galloping','Scurrying','Slithering','Pouncing','Burrowing','Spelunking','Honking','Choreographing','Roaming','Ascending']},
   {icon:'\u{1F92A}',th:'rose',en:'Pure Nonsense',zh:'\u7EAF\u65E0\u5398\u5934',
-   f:['Clauding','Discombobulating','Flibbertigibbeting','Razzle-dazzling','Whatchamacalliting','Lollygagging','Topsy-turvying','Booping'],
-   w:['Clauding','Combobulating','Discombobulating','Recombobulating','Flibbertigibbeting','Boondoggling','Hullaballooing','Shenaniganing','Tomfoolering','Razzle-dazzling','Razzmatazzing','Whatchamacalliting','Dilly-dallying','Lollygagging','Fiddle-faddling','Befuddling','Flummoxing','Canoodling','Smooshing','Booping','Wibbling','Topsy-turvying']},
+   f:['Clauding','Discombobulating','Flibbertigibbeting','Razzle-dazzling','Whatchamacalliting','Dithering','Finagling','Booping'],
+   w:['Clauding','Combobulating','Discombobulating','Recombobulating','Flibbertigibbeting','Boondoggling','Hullaballooing','Shenaniganing','Tomfoolering','Razzle-dazzling','Razzmatazzing','Whatchamacalliting','Dilly-dallying','Lollygagging','Fiddle-faddling','Befuddling','Flummoxing','Canoodling','Smooshing','Booping','Wibbling','Topsy-turvying','Dithering','Finagling']},
   {icon:'\u2728',th:'indigo',en:'Magic & Fantasy',zh:'\u9B54\u6CD5\u4E0E\u5947\u5E7B',
    f:['Enchanting','Levitating','Hyperspacing','Prestidigitating','Transmuting','Quantumizing','Transfiguring','Swooping'],
    w:['Enchanting','Levitating','Transfiguring','Transmuting','Hyperspacing','Prestidigitating','Manifesting','Warping','Beaming','Catapulting','Orbiting','Quantumizing','Swooping']},
   {icon:'\u{1F527}',th:'green',en:'Making & Building',zh:'\u521B\u9020\u4E0E\u6784\u5EFA',
-   f:['Architecting','Forging','Orchestrating','Tinkering','Bootstrapping','Hatching','Gitifying','Improvising'],
-   w:['Crafting','Creating','Composing','Computing','Forging','Forming','Generating','Architecting','Bootstrapping','Hashing','Hatching','Improvising','Incubating','Orchestrating','Sketching','Tinkering','Accomplishing','Actioning','Actualizing','Effecting','Gitifying']},
+   f:['Architecting','Forging','Orchestrating','Tinkering','Bootstrapping','Hatching','Antialiasing','Crunching'],
+   w:['Crafting','Creating','Composing','Computing','Forging','Forming','Generating','Architecting','Bootstrapping','Hashing','Hatching','Improvising','Incubating','Orchestrating','Sketching','Tinkering','Accomplishing','Actioning','Actualizing','Effecting','Gitifying','Antialiasing','Crunching','Interleaving']},
   {icon:'\u{1F300}',th:'brown',en:'Swirls & Flows',zh:'\u6F29\u6DA1\u4E0E\u6D41\u52A8',
    f:['Cascading','Swirling','Undulating','Whirlpooling','Zigzagging','Fluttering','Unfurling','Billowing'],
    w:['Cascading','Coalescing','Spinning','Swirling','Twisting','Undulating','Unfurling','Unravelling','Whirlpooling','Whirring','Zigzagging','Channeling','Channelling','Fluttering','Infusing','Reticulating','Billowing']},
   {icon:'\u{1F3B2}',th:'gray',en:'Everything Else',zh:'\u5176\u4ED6',
    f:['Vibing','Philosophising','Doodling','Herding','Noodling','Newspapering','Gesticulating','Wrangling'],
-   w:['Doing','Working','Processing','Vibing','Wandering','Doodling','Embellishing','Harmonizing','Herding','Gesticulating','Mustering','Newspapering','Noodling','Philosophising','Pontificating','Puttering','Wrangling']},
-  {icon:'\u{1F9E9}',th:'egg',en:'Easter Eggs — Completion Words',zh:'彩蛋 · 思考完成态',
-   f:['Baked','Brewed','Churned','Cogitated','Cooked','Crunched','Saut\u00E9ed','Worked'],
-   w:['Baked','Brewed','Churned','Cogitated','Cooked','Crunched','Saut\u00E9ed','Worked'],bonus:true}
+   w:['Doing','Working','Processing','Vibing','Wandering','Doodling','Embellishing','Harmonizing','Herding','Gesticulating','Mustering','Newspapering','Noodling','Philosophising','Pontificating','Puttering','Wrangling','Pivoting']},
+  {icon:'\u{1F47B}',th:'egg',en:'Retired Words',zh:'已退役 · 曾经的秘密词',
+   f:['Saut\u00E9ing','Flamb\u00E9ing','Thundering','Baked','Brewed','Churned','Cogitated','Cooked','Crunched','Saut\u00E9ed','Worked'],
+   w:['Saut\u00E9ing','Flamb\u00E9ing','Thundering','Baked','Brewed','Churned','Cogitated','Cooked','Crunched','Saut\u00E9ed','Worked'],bonus:true}
 ];
 const A=D.flatMap(c=>c.w);
 
@@ -693,6 +695,21 @@ const F={
 'Pontificating':'📜 展开羊皮卷发表高论，Claude在用教皇式权威口吻阐述观点',
 'Puttering':'🏡 在院子里随手修东西，Claude在轻松随意地整理和完善答案',
 'Wrangling':'🪢 绳结越系越紧，Claude在用绳索驯服那些难以驾驭的复杂问题',
+'Antialiasing':'🖼 把答案的锯齿边缘磨得圆圆滑滑，Claude正在打磨每一个像素级细节',
+'Ascending':'🪜 Claude正踩着梯子一级一级往上爬，答案越来越近啦',
+'Bunning':'🌭 把思路塞进面包里夹好，Claude正在打包你的答案',
+'Choreographing':'🩰 Claude正在给每个步骤编排舞步，让回答优雅起舞',
+'Churning':'🫙 Claude正在使劲搅动思维的黄油桶，好东西快出来了',
+'Crunching':'🦷 Claude正在大力咀嚼海量数据，嘎吱嘎吱超努力',
+'Dithering':'🫨 Claude在犹犹豫豫地抖动像素，让渐变美得恰到好处',
+'Finagling':'🤌 Claude正在灵活斡旋各种细节，悄悄搞定一切',
+'Interleaving':'🪡 Claude正在把多条线索交错编织，织出完美答案',
+'Metamorphosing':'🦚 Claude正在经历华丽蜕变，破茧成蝶只需片刻',
+'Percolating':'🫗 想法正在像咖啡一样慢慢渗透过滤，精华即将滴落',
+'Pivoting':'🔁 Claude灵活转了个身，从新角度重新出发',
+'Pruning':'✂️ Claude正在修剪掉多余枝丫，让答案更精炼清爽',
+'Roaming':'🗺 Claude正在思维的旷野里自由漫游，寻找最佳路径',
+'Symbioting':'🪸 Claude正与知识共生共存，互相滋养才能给你最好的答案',
 'Crunched':'💥 嘎吱一声嚼碎了，Claude已经把你的问题嚼碎消化完毕',
 'Baked':'🍞 烤好出炉了，Claude的答案已经金黄酥脆新鲜出炉',
 'Brewed':'☕ 咖啡萃取完成，Claude已经为你泡好了一杯完美的答案',
@@ -722,7 +739,8 @@ const MS=[
   [120,'🔮','深入秘境 — 大部分词都认识你了'],
   [140,'👑','词汇贵族 — 所剩无几！'],
   [160,'🏅','几乎全收 — 最后冲刺！'],
-  [184,'🏆','全部集齐！！你是传说！']
+  [184,'🎊','只差一点点了！'],
+  [201,'🏆','全部集齐！！你是传说！']
 ];
 let toastTimer=null;
 function showToast(em,msg){
@@ -865,7 +883,7 @@ D.forEach((c,i)=>{
             </div>
           </div>`).join('')}
       </div>
-      ${c.bonus?'<div class="bonus-note"><strong>彩蛋!</strong> 这些不是 spinner 词 — 它们是 Claude 思考<strong>完成后</strong>的总结用词，全部过去式，画风主要是厨房系 🍳由 ππ 在野外发现 🔍</div>':''}
+      ${c.bonus?'<div class="bonus-note"><strong>退役名单 👻</strong> 这些词曾经出现在 Claude Code 的 spinner 里，但在 v2.1.79 中被移除了。其中过去式的词（Baked、Brewed 等）是 Claude 思考<strong>完成后</strong>的总结用词，Sautéing、Flambéing、Thundering 则是从主力阵容中光荣退役 🫡</div>':''}
       ${rest.length?`
         <button class="drawer-btn" onclick="togD(this)">
           Show all ${c.w.length} words
@@ -940,7 +958,7 @@ sIn.addEventListener('input',()=>renS(sIn.value));
 function renS(q){
   q=q.trim().toLowerCase();
   const m=q?SD.filter(d=>d.w.toLowerCase().includes(q)||d.zh.includes(q)):SD;
-  sCt.textContent=q?`${m.length} of 176 match "${q}"`:'176 words \u2014 type English or Chinese';
+  sCt.textContent=q?`${m.length} of 201 match "${q}"`:'201 words \u2014 type English or Chinese';
   if(!m.length){sRe.innerHTML='<div class="s-empty"><div class="be">\u{1F914}</div>No matches</div>';return}
   sRe.innerHTML=m.map(d=>`
     <div class="sr-c" onclick="showW('${d.w.replace(/'/g,"\\'")}');closeS()">
