@@ -124,7 +124,7 @@ body{
 .slide[data-theme=green]{background:linear-gradient(160deg,#eef8f0,#ddf2e2 50%,#ccecce)}
 .slide[data-theme=brown]{background:linear-gradient(160deg,#fef3e2,#fde8c8 50%,#fcddb0)}
 .slide[data-theme=gray]{background:linear-gradient(160deg,#f0eeeb,#e8e4e0 50%,#ddd8d3)}
-.slide[data-theme=egg]{background:linear-gradient(160deg,#e8f4fd,#d4ecfc 50%,#c0e4fb)}
+.slide[data-theme=egg]{background:linear-gradient(160deg,#fdf6e3,#f9edcc 50%,#f3e2b0)}
 
 /* Decorative themed shapes */
 .deco{position:absolute;pointer-events:none;z-index:0;opacity:.35}
@@ -285,12 +285,12 @@ footer a{color:#e8613c;text-decoration:none}
   margin-top:1rem;padding:.7rem 1.2rem;border-radius:14px;
   background:rgba(255,255,255,.6);font-size:.78rem;color:#6b5f55;
   line-height:1.6;text-align:left;display:inline-block;
-  border:1.5px dashed rgba(50,140,200,.3);
+  border:1.5px dashed rgba(180,150,50,.35);
 }
 .bonus-note strong{color:#e8613c}
 .feat-card.egg{
   background:rgba(255,255,255,.7);
-  border:1.5px dashed rgba(50,140,200,.35);
+  border:1.5px dashed rgba(180,150,50,.4);
   position:relative;overflow:hidden;
 }
 .feat-card.egg::after{
@@ -490,8 +490,8 @@ const SVG={
     `<svg viewBox="0 0 200 200"><path d="M50 100 Q100 20 150 100 Q100 180 50 100Z" fill="none" stroke="rgba(160,100,40,.12)" stroke-width="1.5"/></svg>`
   ],
   egg:[
-    `<svg viewBox="0 0 200 200"><ellipse cx="100" cy="105" rx="50" ry="65" fill="none" stroke="rgba(50,140,200,.15)" stroke-width="2" stroke-dasharray="6 4"/><ellipse cx="100" cy="105" rx="30" ry="40" fill="rgba(50,140,200,.05)"/><path d="M80 80 Q100 55 120 80" fill="none" stroke="rgba(50,140,200,.12)" stroke-width="1.5"/></svg>`,
-    `<svg viewBox="0 0 200 200"><text x="50%" y="50%" text-anchor="middle" dominant-baseline="central" font-size="80" fill="rgba(50,140,200,.06)">🥚</text></svg>`
+    `<svg viewBox="0 0 200 200"><ellipse cx="100" cy="105" rx="50" ry="65" fill="none" stroke="rgba(180,150,50,.15)" stroke-width="2" stroke-dasharray="6 4"/><ellipse cx="100" cy="105" rx="30" ry="40" fill="rgba(180,150,50,.05)"/><path d="M80 80 Q100 55 120 80" fill="none" stroke="rgba(180,150,50,.12)" stroke-width="1.5"/></svg>`,
+    `<svg viewBox="0 0 200 200"><circle cx="70" cy="80" r="6" fill="rgba(180,150,50,.1)"/><circle cx="140" cy="100" r="4" fill="rgba(180,150,50,.08)"/><circle cx="100" cy="140" r="5" fill="rgba(180,150,50,.06)"/></svg>`
   ],
   gray:[
     `<svg viewBox="0 0 200 200"><rect x="40" y="40" width="120" height="120" rx="20" fill="none" stroke="rgba(100,90,80,.12)" stroke-width="1.5" stroke-dasharray="6 4"/><rect x="70" y="70" width="60" height="60" rx="10" fill="rgba(100,90,80,.04)" stroke="rgba(100,90,80,.08)" stroke-width="1"/></svg>`,
