@@ -304,7 +304,7 @@ footer a{color:#e8613c;text-decoration:none}
 <body>
 
 <section class="hero">
-  <div class="hero-badge">source: cli.js &middot; 176 words + 1 easter egg</div>
+  <div class="hero-badge">source: cli.js &middot; 176 words + 8 easter eggs</div>
   <h1>Claude Code's <span class="hl">Secret Words</span></h1>
   <p>When Claude thinks, it picks from <em>176 delightful words</em>. Tap to explore each one.</p>
 </section>
@@ -337,7 +337,7 @@ footer a{color:#e8613c;text-decoration:none}
   <button class="arrow" id="nBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="m9 18 6-6-6-6"/></svg></button>
 </div>
 
-<footer>Extracted from <a href="https://github.com/anthropics">@anthropic-ai/claude-code</a> cli.js by Mengyuan</footer>
+<footer>Extracted from <a href="https://github.com/anthropics">@anthropic-ai/claude-code</a> cli.js by ππ</footer>
 
 <!-- Search -->
 <div class="search-ov" id="sOv">
@@ -361,7 +361,8 @@ const E={
 'Crafting':'\u2692\uFE0F','Creating':'\u{1F3A8}','Composing':'\u{1F3B5}','Computing':'\u{1F4BB}','Forging':'\u{1F525}','Forming':'\u{1FAB5}','Generating':'\u2699\uFE0F','Architecting':'\u{1F3D7}','Bootstrapping':'\u{1F462}','Hashing':'\u{1F523}','Hatching':'\u{1F423}','Improvising':'\u{1F3B7}','Incubating':'\u{1F95A}','Orchestrating':'\u{1F3BC}','Sketching':'\u270F\uFE0F','Tinkering':'\u{1F529}','Accomplishing':'\u2705','Actioning':'\u{1F3AC}','Actualizing':'\u{1F4AA}','Effecting':'\u{1F4A5}','Gitifying':'\u{1F333}',
 'Cascading':'\u{1F4A6}','Coalescing':'\u{1F300}','Spinning':'\u{1F3A1}','Swirling':'\u{1F32A}','Twisting':'\u{1F500}','Undulating':'\u{1F30A}','Unfurling':'\u{1F3F3}','Unravelling':'\u{1F9F5}','Whirlpooling':'\u{1F30A}','Whirring':'\u{1F4BF}','Zigzagging':'\u26A1','Channeling':'\u{1F4E1}','Channelling':'\u{1F4E1}','Fluttering':'\u{1F98B}','Infusing':'\u{1FAD6}','Reticulating':'\u{1F578}','Billowing':'\u2601\uFE0F',
 'Doing':'\u270B','Working':'\u{1F4BC}','Processing':'\u{1F504}','Vibing':'\u{1F60E}','Wandering':'\u{1F6B6}','Doodling':'\u{1F58D}','Embellishing':'\u{1F48E}','Harmonizing':'\u{1F3B6}','Herding':'\u{1F411}','Gesticulating':'\u{1F44B}','Mustering':'\u{1F4AA}','Newspapering':'\u{1F4F0}','Noodling':'\u{1F35C}','Philosophising':'\u{1F9D4}','Pontificating':'\u{1F4DC}','Puttering':'\u{1F3E1}','Wrangling':'\u{1F920}',
-'Crunched':'\u{1F4A5}'
+'Crunched':'\u{1F4A5}',
+'Baked':'\u{1F35E}','Brewed':'\u2615','Churned':'\u{1F9C8}','Cogitated':'\u{1F9E0}','Cooked':'\u{1F373}','Saut\u00E9ed':'\u{1F958}','Worked':'\u{1F4BC}'
 };
 const Z={
 'Thinking':'\u601D\u8003\u4E2D','Pondering':'\u6C89\u601D\u4E2D','Contemplating':'\u51A5\u60F3\u4E2D','Considering':'\u659F\u914C\u4E2D','Deliberating':'\u6DF1\u601D\u719F\u8651\u4E2D','Cogitating':'\u82E6\u601D\u4E2D','Ruminating':'\u53CD\u520D\u4E2D','Musing':'\u9050\u60F3\u4E2D','Mulling':'\u7422\u78E8\u4E2D','Calculating':'\u8BA1\u7B97\u4E2D','Deciphering':'\u7834\u8BD1\u4E2D','Inferring':'\u63A8\u7406\u4E2D','Synthesizing':'\u7EFC\u5408\u4E2D','Determining':'\u5224\u5B9A\u4E2D','Elucidating':'\u9610\u660E\u4E2D','Cerebrating':'\u7528\u8111\u4E2D','Perusing':'\u7EC6\u8BFB\u4E2D','Puzzling':'\u89E3\u8C1C\u4E2D','Ideating':'\u6784\u601D\u4E2D','Imagining':'\u60F3\u8C61\u4E2D','Envisioning':'\u5C55\u671B\u4E2D',
@@ -373,7 +374,8 @@ const Z={
 'Crafting':'\u6253\u9020\u4E2D','Creating':'\u521B\u9020\u4E2D','Composing':'\u8C31\u5199\u4E2D','Computing':'\u8FD0\u7B97\u4E2D','Forging':'\u953B\u9020\u4E2D','Forming':'\u5851\u5F62\u4E2D','Generating':'\u751F\u6210\u4E2D','Architecting':'\u67B6\u6784\u4E2D','Bootstrapping':'\u81EA\u4E3E\u4E2D','Hashing':'\u54C8\u5E0C\u4E2D','Hatching':'\u5B75\u5316\u4E2D','Improvising':'\u5373\u5174\u53D1\u6325\u4E2D','Incubating':'\u5B75\u5316\u57F9\u80B2\u4E2D','Orchestrating':'\u7F16\u6392\u4E2D','Sketching':'\u7D20\u63CF\u4E2D','Tinkering':'\u6363\u9F13\u4E2D','Accomplishing':'\u641E\u5B9A\u4E2D','Actioning':'\u6267\u884C\u4E2D','Actualizing':'\u5B9E\u73B0\u4E2D','Effecting':'\u751F\u6548\u4E2D','Gitifying':'Git\u5316\u4E2D',
 'Cascading':'\u5C42\u53E0\u4E2D','Coalescing':'\u805A\u5408\u4E2D','Spinning':'\u65CB\u8F6C\u4E2D','Swirling':'\u6253\u65CB\u4E2D','Twisting':'\u626D\u66F2\u4E2D','Undulating':'\u8D77\u4F0F\u4E2D','Unfurling':'\u5C55\u5F00\u4E2D','Unravelling':'\u89E3\u5F00\u4E2D','Whirlpooling':'\u6F29\u6DA1\u4E2D','Whirring':'\u55E1\u55E1\u8F6C\u4E2D','Zigzagging':'\u66F2\u6298\u524D\u884C\u4E2D','Channeling':'\u5F15\u5BFC\u4E2D','Channelling':'\u5F15\u5BFC\u4E2D','Fluttering':'\u7FE9\u7FE9\u98DE\u821E\u4E2D','Infusing':'\u6CE8\u5165\u4E2D','Reticulating':'\u7F51\u683C\u5316\u4E2D','Billowing':'\u7FFB\u6D8C\u4E2D',
 'Doing':'\u505A\u4E8B\u4E2D','Working':'\u5DE5\u4F5C\u4E2D','Processing':'\u5904\u7406\u4E2D','Vibing':'\u611F\u53D7\u6C1B\u56F4\u4E2D','Wandering':'\u6F2B\u6E38\u4E2D','Doodling':'\u6D82\u9E26\u4E2D','Embellishing':'\u6DA6\u8272\u4E2D','Harmonizing':'\u548C\u8C10\u4E2D','Herding':'\u653E\u7267\u4E2D','Gesticulating':'\u6BD4\u624B\u753B\u811A\u4E2D','Mustering':'\u96C6\u7ED3\u4E2D','Newspapering':'\u770B\u62A5\u4E2D','Noodling':'\u778E\u7422\u78E8\u4E2D','Philosophising':'\u54F2\u5B66\u601D\u8FA8\u4E2D','Pontificating':'\u8BF4\u6559\u4E2D','Puttering':'\u78E8\u6D0B\u5DE5\u4E2D','Wrangling':'\u4E89\u8BBA\u4E2D',
-'Crunched':'嘎嘣完毕！'
+'Crunched':'嘎嘣完了',
+'Baked':'烤好了','Brewed':'酿好了','Churned':'搅好了','Cogitated':'想好了','Cooked':'做好了','Saut\u00E9ed':'煎好了','Worked':'干完了'
 };
 
 const D=[
@@ -404,9 +406,9 @@ const D=[
   {icon:'\u{1F3B2}',th:'gray',en:'Everything Else',zh:'\u5176\u4ED6',
    f:['Vibing','Philosophising','Doodling','Herding','Noodling','Newspapering','Gesticulating','Wrangling'],
    w:['Doing','Working','Processing','Vibing','Wandering','Doodling','Embellishing','Harmonizing','Herding','Gesticulating','Mustering','Newspapering','Noodling','Philosophising','Pontificating','Puttering','Wrangling']},
-  {icon:'\u{1F9E9}',th:'purple',en:'Easter Egg',zh:'\u5F69\u86CB',
-   f:['Crunched'],
-   w:['Crunched'],bonus:true}
+  {icon:'\u{1F9E9}',th:'purple',en:'Easter Eggs — Completion Words',zh:'彩蛋 · 思考完成态',
+   f:['Baked','Brewed','Churned','Cogitated','Cooked','Crunched','Saut\u00E9ed','Worked'],
+   w:['Baked','Brewed','Churned','Cogitated','Cooked','Crunched','Saut\u00E9ed','Worked'],bonus:true}
 ];
 const A=D.flatMap(c=>c.w);
 
@@ -511,7 +513,7 @@ D.forEach((c,i)=>{
             </div>
           </div>`).join('')}
       </div>
-      ${c.bonus?'<div class="bonus-note"><strong>彩蛋!</strong> 这不是 spinner 词 — 它是 Claude 思考<strong>完成后</strong>的总结用词，过去式，意思是"嘎嘣嘎嘣算完了"。由权梦圆在野外发现 🔍</div>':''}
+      ${c.bonus?'<div class="bonus-note"><strong>彩蛋!</strong> 这些不是 spinner 词 — 它们是 Claude 思考<strong>完成后</strong>的总结用词，全部过去式，画风主要是厨房系 🍳由 ππ 在野外发现 🔍</div>':''}
       ${rest.length?`
         <button class="drawer-btn" onclick="togD(this)">
           Show all ${c.w.length} words
