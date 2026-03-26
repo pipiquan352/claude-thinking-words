@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claude Code's Secret Thinking Words</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Space Grotesk',system-ui,sans-serif;
+  background:#faf7f5;color:#2d2420;line-height:1.6;
+  overflow-x:hidden;min-height:100vh;
+  display:flex;flex-direction:column;
+}
+
+/* ─── Hero (kept from v2) ─── */
+.hero{
+  text-align:center;
+  padding:clamp(2rem,5vw,3.5rem) 1.5rem clamp(1.2rem,3vw,2rem);
+  background:#faf7f5;
+  position:relative;flex-shrink:0;
+}
+.hero::after{
+  content:'';position:absolute;
+  bottom:0;left:10%;right:10%;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(45,36,32,.1),transparent);
+}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:.5rem;
+  padding:.3rem .9rem;background:#fff0eb;color:#e8613c;
+  border-radius:100px;font-size:.75rem;font-weight:600;
+  letter-spacing:.03em;margin-bottom:1rem;
+}
+.hero h1{
+  font-size:clamp(1.8rem,4.5vw,3rem);font-weight:700;
+  line-height:1.15;letter-spacing:-.03em;margin-bottom:.5rem;
+}
+.hero h1 .hl{
+  background:linear-gradient(135deg,#e8613c,#7c5cfc);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.hero p{
+  color:#8a7e76;font-size:clamp(.9rem,1.4vw,1.05rem);
+  max-width:480px;margin:0 auto;
+}
+.hero p em{font-style:normal;color:#2d2420;font-weight:500}
+
+/* ─── Spinner + Controls ─── */
+.controls{
+  display:flex;align-items:center;justify-content:center;
+  gap:1rem;padding:1.2rem 1rem;flex-wrap:wrap;
+  background:#faf7f5;flex-shrink:0;
+}
+.spinner-box{
+  width:min(60vw,320px);height:85px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  background:#2d2420;border-radius:14px;gap:.1rem;
+}
+.sp-row{display:flex;align-items:center}
+.sp-icon{
+  font-family:'Space Mono',monospace;font-size:1rem;
+  color:#7c5cfc;margin-right:.4rem;width:1rem;text-align:center;
+}
+.sp-word{
+  font-family:'Space Mono',monospace;
+  font-size:clamp(.95rem,2.2vw,1.15rem);
+  color:#f5f0eb;font-weight:700;white-space:nowrap;
+}
+.sp-word.cyc{animation:wf .08s ease}
+@keyframes wf{0%{opacity:.3}100%{opacity:1}}
+.sp-zh{font-size:.7rem;color:#8a7e76;font-family:system-ui,sans-serif;min-height:1em;transition:opacity .2s}
+.sp-dots span{opacity:0;color:#f5f0eb;font-family:'Space Mono',monospace}
+.sp-dots.on span:nth-child(1){animation:df 1.2s 0s infinite}
+.sp-dots.on span:nth-child(2){animation:df 1.2s .2s infinite}
+.sp-dots.on span:nth-child(3){animation:df 1.2s .4s infinite}
+@keyframes df{0%,20%{opacity:0}40%,60%{opacity:1}80%,100%{opacity:0}}
+
+.btn{
+  font-family:'Space Grotesk',sans-serif;font-weight:600;
+  padding:.6rem 1.4rem;border-radius:100px;border:none;cursor:pointer;
+  transition:all .2s;font-size:.85rem;
+  display:flex;align-items:center;gap:.4rem;
+}
+.btn-spin{background:#e8613c;color:#fff}
+.btn-spin:hover{background:#d4552f;transform:translateY(-1px);box-shadow:0 4px 16px rgba(232,97,60,.3)}
+.btn-search{background:#fff;color:#8a7e76;border:1.5px solid rgba(45,36,32,.12)}
+.btn-search:hover{border-color:#7c5cfc;color:#7c5cfc}
+.btn-search svg{width:14px;height:14px}
+.btn-search kbd{
+  font-family:'Space Mono',monospace;font-size:.6rem;
+  background:#faf7f5;padding:.08rem .3rem;border-radius:3px;
+  border:1px solid rgba(45,36,32,.1);
+}
+
+/* ─── Category nav (emoji tabs) ─── */
+.cat-nav{
+  display:flex;justify-content:center;gap:.3rem;
+  padding:.6rem 1rem;background:#faf7f5;flex-shrink:0;
+  border-bottom:1px solid rgba(45,36,32,.06);
+}
+.cat-tab{
+  width:36px;height:36px;border-radius:12px;border:none;cursor:pointer;
+  font-size:1.15rem;display:flex;align-items:center;justify-content:center;
+  background:transparent;transition:all .2s;opacity:.45;
+}
+.cat-tab:hover{opacity:.75;background:rgba(0,0,0,.03);transform:scale(1.08)}
+.cat-tab.active{opacity:1;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.08);transform:scale(1.12)}
+
+/* ─── Slides area ─── */
+.slides-area{flex:1;position:relative;overflow:hidden;min-height:0}
+.slides-track{display:flex;height:100%;transition:transform .45s cubic-bezier(.4,0,.15,1)}
+.slide{min-width:100%;height:100%;overflow:hidden;position:relative}
+
+/* Slide theme backgrounds — LIGHT pastels */
+.slide[data-theme=purple]{background:linear-gradient(160deg,#f0edff,#e8e2ff 50%,#ddd5ff)}
+.slide[data-theme=accent]{background:linear-gradient(160deg,#fff0eb,#ffe4d9 50%,#ffd9ca)}
+.slide[data-theme=teal]{background:linear-gradient(160deg,#e6f7f5,#d4f0ec 50%,#c2eae4)}
+.slide[data-theme=amber]{background:linear-gradient(160deg,#fff8e1,#fff0c4 50%,#ffe8a8)}
+.slide[data-theme=rose]{background:linear-gradient(160deg,#ffeef4,#ffdde8 50%,#ffcede)}
+.slide[data-theme=indigo]{background:linear-gradient(160deg,#eef1ff,#e0e6ff 50%,#d2daff)}
+.slide[data-theme=green]{background:linear-gradient(160deg,#eef8f0,#ddf2e2 50%,#ccecce)}
+.slide[data-theme=brown]{background:linear-gradient(160deg,#fef3e2,#fde8c8 50%,#fcddb0)}
+.slide[data-theme=gray]{background:linear-gradient(160deg,#f0eeeb,#e8e4e0 50%,#ddd8d3)}
+
+/* Decorative themed shapes */
+.deco{position:absolute;pointer-events:none;z-index:0;opacity:.35}
+.deco svg{width:100%;height:100%}
+.deco-a{right:-5%;bottom:-8%;width:clamp(220px,45vw,480px);height:clamp(220px,45vw,480px);animation:breathe 6s ease-in-out infinite}
+.deco-b{left:-6%;top:3%;width:clamp(150px,30vw,320px);height:clamp(150px,30vw,320px);animation:breathe 8s ease-in-out 1s infinite}
+@keyframes breathe{
+  0%,100%{transform:scale(1);opacity:.35}
+  50%{transform:scale(1.08);opacity:.5}
+}
+
+.slide-inner{
+  position:relative;z-index:1;
+  padding:clamp(1.5rem,4vw,2.5rem) clamp(1.2rem,4vw,3rem) clamp(2rem,4vw,3rem);
+  max-width:960px;margin:0 auto;
+}
+
+.slide-header{margin-bottom:clamp(1.2rem,3vw,2rem)}
+.slide-icon{font-size:clamp(2.5rem,6vw,3.5rem);line-height:1;margin-bottom:.4rem}
+.slide-title{
+  font-size:clamp(1.5rem,3.5vw,2.2rem);font-weight:700;
+  letter-spacing:-.03em;line-height:1.1;color:#2d2420;
+}
+.slide-sub{display:flex;align-items:center;gap:.6rem;margin-top:.3rem}
+.slide-zh{font-size:clamp(.8rem,1.4vw,.95rem);color:#8a7e76}
+.slide-badge{
+  font-size:.65rem;font-weight:600;padding:.15rem .5rem;
+  border-radius:100px;background:rgba(45,36,32,.08);color:#6b5f55;
+}
+
+/* Featured grid */
+.feat-grid{
+  display:flex;flex-wrap:wrap;gap:clamp(.5rem,1.2vw,.8rem);
+  margin-bottom:1rem;
+}
+.feat-card{
+  display:flex;align-items:center;gap:.55rem;
+  padding:.55rem .9rem .55rem .65rem;
+  border-radius:14px;background:rgba(255,255,255,.65);
+  backdrop-filter:blur(6px);
+  border:1px solid rgba(255,255,255,.5);
+  cursor:pointer;transition:all .22s;
+}
+.feat-card:hover{
+  background:rgba(255,255,255,.9);
+  transform:translateY(-3px);
+  box-shadow:0 6px 20px rgba(0,0,0,.07);
+}
+.feat-card:active{transform:scale(.97)}
+.feat-card .fc-e{font-size:clamp(1.5rem,3vw,2rem);flex-shrink:0}
+.feat-card .fc-t{display:flex;flex-direction:column;gap:.02rem}
+.feat-card .fc-en{font-size:clamp(.78rem,1.1vw,.88rem);font-weight:600;color:#2d2420;line-height:1.2}
+.feat-card .fc-zh{font-size:.63rem;color:#8a7e76;font-family:system-ui,sans-serif}
+
+/* Vary sizes */
+.feat-card:nth-child(3n+1){padding:.7rem 1.1rem .7rem .8rem}
+.feat-card:nth-child(3n+1) .fc-e{font-size:clamp(1.8rem,3.5vw,2.4rem)}
+.feat-card:nth-child(3n+1) .fc-en{font-size:clamp(.85rem,1.3vw,.98rem)}
+
+/* Show all drawer */
+.drawer-btn{
+  font-family:'Space Grotesk',sans-serif;font-size:.78rem;font-weight:500;
+  color:#8a7e76;background:none;border:none;cursor:pointer;
+  display:flex;align-items:center;gap:.3rem;padding:.4rem 0;
+  transition:color .15s;
+}
+.drawer-btn:hover{color:#2d2420}
+.drawer-btn svg{width:14px;height:14px;transition:transform .2s}
+.drawer-btn.open svg{transform:rotate(180deg)}
+
+.drawer{display:none;flex-wrap:wrap;gap:.4rem;padding:.6rem 0}
+.drawer.open{display:flex}
+
+.mpill{
+  padding:.3rem .7rem;border-radius:100px;
+  font-size:.72rem;font-weight:500;
+  background:rgba(255,255,255,.55);color:#2d2420;
+  border:1px solid rgba(255,255,255,.4);
+  cursor:pointer;transition:all .15s;
+  display:flex;align-items:center;gap:.35rem;
+}
+.mpill:hover{background:rgba(255,255,255,.85);transform:translateY(-1px)}
+.mpill .me{font-size:.85rem}
+.mpill .mz{font-size:.55rem;color:#8a7e76;font-family:system-ui,sans-serif}
+
+/* Bottom nav arrows */
+.bottom-nav{
+  display:flex;align-items:center;justify-content:center;gap:.8rem;
+  padding:.6rem;background:#faf7f5;flex-shrink:0;
+  border-top:1px solid rgba(45,36,32,.06);
+}
+.arrow{
+  width:36px;height:36px;border-radius:50%;
+  border:1.5px solid rgba(45,36,32,.12);background:#fff;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  color:#2d2420;transition:all .15s;
+}
+.arrow:hover{border-color:#e8613c;color:#e8613c}
+.arrow:disabled{opacity:.25;cursor:default}
+.arrow svg{width:16px;height:16px}
+.page-info{font-size:.75rem;color:#8a7e76;font-weight:500;min-width:60px;text-align:center}
+
+/* ─── Search overlay ─── */
+.search-ov{
+  position:fixed;inset:0;z-index:200;
+  background:rgba(250,247,245,.97);backdrop-filter:blur(16px);
+  display:none;flex-direction:column;
+}
+.search-ov.open{display:flex}
+.s-bar{
+  display:flex;align-items:center;gap:.75rem;
+  padding:1rem clamp(1rem,3vw,2rem);
+  border-bottom:1px solid rgba(45,36,32,.08);
+}
+.s-bar svg{width:20px;height:20px;color:#8a7e76;flex-shrink:0}
+.s-bar input{
+  border:none;outline:none;background:none;
+  font-family:'Space Grotesk',sans-serif;
+  font-size:1.15rem;color:#2d2420;width:100%;font-weight:500;
+}
+.s-bar input::placeholder{color:#c4bbb4}
+.s-close{
+  font-family:'Space Grotesk',sans-serif;font-size:.75rem;font-weight:500;
+  color:#8a7e76;background:rgba(0,0,0,.04);border:none;cursor:pointer;
+  padding:.3rem .7rem;border-radius:6px;transition:all .15s;
+}
+.s-close:hover{background:rgba(0,0,0,.08);color:#2d2420}
+.s-count{padding:.5rem clamp(1rem,3vw,2rem);font-size:.75rem;color:#8a7e76;font-weight:500}
+.s-results{
+  flex:1;overflow-y:auto;padding:.5rem clamp(1rem,3vw,2rem) 2rem;
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));
+  gap:.6rem;align-content:start;
+}
+.sr-c{
+  display:flex;flex-direction:column;align-items:center;gap:.2rem;
+  padding:.75rem .5rem;border-radius:14px;background:#fff;
+  box-shadow:0 1px 4px rgba(0,0,0,.04);
+  cursor:pointer;transition:all .2s;text-align:center;
+}
+.sr-c:hover{transform:translateY(-2px);box-shadow:0 4px 14px rgba(0,0,0,.08)}
+.sr-c .re{font-size:1.5rem}
+.sr-c .rn{font-size:.82rem;font-weight:600;color:#2d2420}
+.sr-c .rn mark{background:rgba(124,92,252,.2);color:#2d2420;border-radius:2px;padding:0 .1rem}
+.sr-c .rz{font-size:.68rem;color:#8a7e76;font-family:system-ui,sans-serif}
+.sr-c .rc{font-size:.58rem;color:#bbb;margin-top:.1rem}
+.s-empty{grid-column:1/-1;text-align:center;padding:3rem 1rem;color:#8a7e76}
+.s-empty .be{font-size:3rem;margin-bottom:.5rem}
+
+/* ─── Footer ─── */
+footer{text-align:center;padding:1rem;font-size:.7rem;color:#bbb;flex-shrink:0;background:#faf7f5}
+footer a{color:#e8613c;text-decoration:none}
+
+@media(max-width:600px){
+  .controls{gap:.6rem}
+  .spinner-box{width:min(55vw,240px);height:72px}
+  .sp-word{font-size:.85rem}
+  .feat-card{padding:.45rem .7rem .45rem .55rem}
+  .s-results{grid-template-columns:repeat(auto-fill,minmax(115px,1fr))}
+  .cat-tab{width:30px;height:30px;font-size:1rem;border-radius:10px}
+}
+</style>
+</head>
+<body>
+
+<section class="hero">
+  <div class="hero-badge">source: cli.js &middot; 176 words</div>
+  <h1>Claude Code's <span class="hl">Secret Words</span></h1>
+  <p>When Claude thinks, it picks from <em>176 delightful words</em>. Tap to explore each one.</p>
+</section>
+
+<div class="controls">
+  <div class="spinner-box">
+    <div class="sp-row">
+      <span class="sp-icon" id="spI">&#x25D0;</span>
+      <span class="sp-word" id="spW">Clauding</span>
+      <span class="sp-dots on" id="spD"><span>.</span><span>.</span><span>.</span></span>
+    </div>
+    <div class="sp-zh" id="spZ">&#x514B;&#x52B3;&#x4E01;&#x4E2D;</div>
+  </div>
+  <button class="btn btn-spin" onclick="spin()">Spin</button>
+  <button class="btn btn-search" id="sTrig">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg>
+    Search <kbd>Ctrl+K</kbd>
+  </button>
+</div>
+
+<nav class="cat-nav" id="catNav"></nav>
+
+<div class="slides-area">
+  <div class="slides-track" id="track"></div>
+</div>
+
+<div class="bottom-nav">
+  <button class="arrow" id="pBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="m15 18-6-6 6-6"/></svg></button>
+  <span class="page-info" id="pgInfo">1 / 9</span>
+  <button class="arrow" id="nBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="m9 18 6-6-6-6"/></svg></button>
+</div>
+
+<footer>Extracted from <a href="https://github.com/anthropics">@anthropic-ai/claude-code</a> cli.js by Mengyuan</footer>
+
+<!-- Search -->
+<div class="search-ov" id="sOv">
+  <div class="s-bar">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg>
+    <input type="text" id="sIn" placeholder="Search English or Chinese..." autocomplete="off">
+    <button class="s-close" id="sCl">ESC</button>
+  </div>
+  <div class="s-count" id="sCt">176 words across 9 categories</div>
+  <div class="s-results" id="sRe"></div>
+</div>
+
+<script>
+const E={
+'Thinking':'\u{1F914}','Pondering':'\u{1F9D0}','Contemplating':'\u{1F30C}','Considering':'\u2696\uFE0F','Deliberating':'\u{1F3DB}','Cogitating':'\u{1F4A1}','Ruminating':'\u{1F404}','Musing':'\u2601\uFE0F','Mulling':'\u{1F377}','Calculating':'\u{1F9EE}','Deciphering':'\u{1F50D}','Inferring':'\u{1F9E9}','Synthesizing':'\u{1F52C}','Determining':'\u{1F3AF}','Elucidating':'\u{1F4A1}','Cerebrating':'\u{1F9E0}','Perusing':'\u{1F4D6}','Puzzling':'\u{1F9E9}','Ideating':'\u{1F4AD}','Imagining':'\u{1F308}','Envisioning':'\u{1F52E}',
+'Baking':'\u{1F35E}','Brewing':'\u2615','Cooking':'\u{1F373}','Simmering':'\u{1F372}','Stewing':'\u{1F957}','Marinating':'\u{1F969}','Fermenting':'\u{1F37A}','Seasoning':'\u{1F9C2}','Kneading':'\u{1F96F}','Leavening':'\u{1F95E}','Caramelizing':'\u{1F36E}','Garnishing':'\u{1F33F}','Julienning':'\u{1F52A}','Saut\u00E9ing':'\u{1F958}','Flamb\u00E9ing':'\u{1F525}','Frosting':'\u{1F382}','Drizzling':'\u{1F36F}','Whisking':'\u{1F95A}','Zesting':'\u{1F34B}','Proofing':'\u{1F35E}','Tempering':'\u{1F36B}','Blanching':'\u{1F336}','Concocting':'\u{1F9EA}',
+'Photosynthesizing':'\u2600\uFE0F','Pollinating':'\u{1F41D}','Sprouting':'\u{1F331}','Germinating':'\u{1F33E}','Crystallizing':'\u{1F48E}','Evaporating':'\u{1F32B}','Ionizing':'\u26A1','Nucleating':'\u269B\uFE0F','Osmosing':'\u{1F4A7}','Precipitating':'\u{1F327}','Sublimating':'\u{1F300}','Propagating':'\u{1F4E1}','Cultivating':'\u{1F33B}','Nebulizing':'\u{1F30A}','Nesting':'\u{1F426}','Roosting':'\u{1F414}','Bloviating':'\u{1F4AC}','Flowing':'\u{1F30A}','Ebbing':'\u{1F319}','Gusting':'\u{1F32C}','Misting':'\u{1F32B}','Thundering':'\u26C8\uFE0F',
+'Moonwalking':'\u{1F311}','Boogieing':'\u{1F57A}','Jitterbugging':'\u{1F41B}','Sock-hopping':'\u{1F9E6}','Shimmying':'\u{1F483}','Frolicking':'\u{1F938}','Gallivanting':'\u{1F3C7}','Waddling':'\u{1F986}','Scampering':'\u{1F401}','Schlepping':'\u{1F4BC}','Skedaddling':'\u{1F3C3}','Grooving':'\u{1F3B6}','Meandering':'\u{1F6A3}','Moseying':'\u{1F920}','Perambulating':'\u{1F6B6}','Galloping':'\u{1F40E}','Scurrying':'\u{1F400}','Slithering':'\u{1F40D}','Pouncing':'\u{1F431}','Burrowing':'\u{1F439}','Spelunking':'\u26F0\uFE0F','Honking':'\u{1F4E2}',
+'Clauding':'\u{1F916}','Combobulating':'\u{1F527}','Discombobulating':'\u{1F635}','Recombobulating':'\u{1F504}','Flibbertigibbeting':'\u{1F47B}','Boondoggling':'\u{1F9F6}','Hullaballooing':'\u{1F4E3}','Shenaniganing':'\u{1F608}','Tomfoolering':'\u{1F921}','Razzle-dazzling':'\u2728','Razzmatazzing':'\u{1F386}','Whatchamacalliting':'\u2753','Dilly-dallying':'\u{1F552}','Lollygagging':'\u{1F36D}','Fiddle-faddling':'\u{1F3BB}','Befuddling':'\u{1F616}','Flummoxing':'\u{1F62F}','Canoodling':'\u{1F491}','Smooshing':'\u{1F917}','Booping':'\u{1F449}','Wibbling':'\u{1FAE0}','Topsy-turvying':'\u{1F643}',
+'Enchanting':'\u{1FA84}','Levitating':'\u{1F9D9}','Transfiguring':'\u{1F98B}','Transmuting':'\u2697\uFE0F','Hyperspacing':'\u{1F680}','Prestidigitating':'\u{1F3A9}','Manifesting':'\u{1F31F}','Warping':'\u{1F30D}','Beaming':'\u{1F4AB}','Catapulting':'\u{1F3F9}','Orbiting':'\u{1F6F0}','Quantumizing':'\u{1F30C}','Swooping':'\u{1F985}',
+'Crafting':'\u2692\uFE0F','Creating':'\u{1F3A8}','Composing':'\u{1F3B5}','Computing':'\u{1F4BB}','Forging':'\u{1F525}','Forming':'\u{1FAB5}','Generating':'\u2699\uFE0F','Architecting':'\u{1F3D7}','Bootstrapping':'\u{1F462}','Hashing':'\u{1F523}','Hatching':'\u{1F423}','Improvising':'\u{1F3B7}','Incubating':'\u{1F95A}','Orchestrating':'\u{1F3BC}','Sketching':'\u270F\uFE0F','Tinkering':'\u{1F529}','Accomplishing':'\u2705','Actioning':'\u{1F3AC}','Actualizing':'\u{1F4AA}','Effecting':'\u{1F4A5}','Gitifying':'\u{1F333}',
+'Cascading':'\u{1F4A6}','Coalescing':'\u{1F300}','Spinning':'\u{1F3A1}','Swirling':'\u{1F32A}','Twisting':'\u{1F500}','Undulating':'\u{1F30A}','Unfurling':'\u{1F3F3}','Unravelling':'\u{1F9F5}','Whirlpooling':'\u{1F30A}','Whirring':'\u{1F4BF}','Zigzagging':'\u26A1','Channeling':'\u{1F4E1}','Channelling':'\u{1F4E1}','Fluttering':'\u{1F98B}','Infusing':'\u{1FAD6}','Reticulating':'\u{1F578}','Billowing':'\u2601\uFE0F',
+'Doing':'\u270B','Working':'\u{1F4BC}','Processing':'\u{1F504}','Vibing':'\u{1F60E}','Wandering':'\u{1F6B6}','Doodling':'\u{1F58D}','Embellishing':'\u{1F48E}','Harmonizing':'\u{1F3B6}','Herding':'\u{1F411}','Gesticulating':'\u{1F44B}','Mustering':'\u{1F4AA}','Newspapering':'\u{1F4F0}','Noodling':'\u{1F35C}','Philosophising':'\u{1F9D4}','Pontificating':'\u{1F4DC}','Puttering':'\u{1F3E1}','Wrangling':'\u{1F920}'
+};
+const Z={
+'Thinking':'\u601D\u8003\u4E2D','Pondering':'\u6C89\u601D\u4E2D','Contemplating':'\u51A5\u60F3\u4E2D','Considering':'\u659F\u914C\u4E2D','Deliberating':'\u6DF1\u601D\u719F\u8651\u4E2D','Cogitating':'\u82E6\u601D\u4E2D','Ruminating':'\u53CD\u520D\u4E2D','Musing':'\u9050\u60F3\u4E2D','Mulling':'\u7422\u78E8\u4E2D','Calculating':'\u8BA1\u7B97\u4E2D','Deciphering':'\u7834\u8BD1\u4E2D','Inferring':'\u63A8\u7406\u4E2D','Synthesizing':'\u7EFC\u5408\u4E2D','Determining':'\u5224\u5B9A\u4E2D','Elucidating':'\u9610\u660E\u4E2D','Cerebrating':'\u7528\u8111\u4E2D','Perusing':'\u7EC6\u8BFB\u4E2D','Puzzling':'\u89E3\u8C1C\u4E2D','Ideating':'\u6784\u601D\u4E2D','Imagining':'\u60F3\u8C61\u4E2D','Envisioning':'\u5C55\u671B\u4E2D',
+'Baking':'\u70D8\u7119\u4E2D','Brewing':'\u917F\u9020\u4E2D','Cooking':'\u70F9\u996A\u4E2D','Simmering':'\u6587\u706B\u6162\u7096\u4E2D','Stewing':'\u7096\u716E\u4E2D','Marinating':'\u8150\u5236\u4E2D','Fermenting':'\u53D1\u9175\u4E2D','Seasoning':'\u8C03\u5473\u4E2D','Kneading':'\u63C9\u9762\u4E2D','Leavening':'\u53D1\u9762\u4E2D','Caramelizing':'\u7126\u7CD6\u5316\u4E2D','Garnishing':'\u6446\u76D8\u4E2D','Julienning':'\u5207\u4E1D\u4E2D','Saut\u00E9ing':'\u714E\u7092\u4E2D','Flamb\u00E9ing':'\u706B\u7130\u7099\u70E4\u4E2D','Frosting':'\u88F1\u82B1\u4E2D','Drizzling':'\u6DCB\u9171\u4E2D','Whisking':'\u6253\u86CB\u4E2D','Zesting':'\u64E6\u67E0\u6AAC\u76AE\u4E2D','Proofing':'\u9192\u9762\u4E2D','Tempering':'\u8C03\u6E29\u4E2D','Blanching':'\u7110\u6C34\u4E2D','Concocting':'\u8C03\u914D\u4E2D',
+'Photosynthesizing':'\u5149\u5408\u4F5C\u7528\u4E2D','Pollinating':'\u6388\u7C89\u4E2D','Sprouting':'\u53D1\u82BD\u4E2D','Germinating':'\u840C\u82BD\u4E2D','Crystallizing':'\u7ED3\u6676\u4E2D','Evaporating':'\u84B8\u53D1\u4E2D','Ionizing':'\u7535\u79BB\u4E2D','Nucleating':'\u6210\u6838\u4E2D','Osmosing':'\u6E17\u900F\u4E2D','Precipitating':'\u6C89\u6DC0\u4E2D','Sublimating':'\u5347\u534E\u4E2D','Propagating':'\u4F20\u64AD\u4E2D','Cultivating':'\u57F9\u80B2\u4E2D','Nebulizing':'\u96FE\u5316\u4E2D','Nesting':'\u7B51\u5DE2\u4E2D','Roosting':'\u6816\u606F\u4E2D','Bloviating':'\u5938\u5938\u5176\u8C08\u4E2D','Flowing':'\u6D41\u6DCC\u4E2D','Ebbing':'\u9000\u6F6E\u4E2D','Gusting':'\u8D77\u98CE\u4E2D','Misting':'\u8D77\u96FE\u4E2D','Thundering':'\u6253\u96F7\u4E2D',
+'Moonwalking':'\u592A\u7A7A\u6B65\u4E2D','Boogieing':'\u8E66\u8FEA\u4E2D','Jitterbugging':'\u5409\u7279\u5DF4\u4E2D','Sock-hopping':'\u6447\u6446\u821E\u4E2D','Shimmying':'\u626D\u626D\u821E\u4E2D','Frolicking':'\u5B09\u620F\u4E2D','Gallivanting':'\u95F2\u901B\u4E2D','Waddling':'\u6447\u6447\u6446\u6446\u4E2D','Scampering':'\u8E66\u8E66\u8DF3\u8DF3\u4E2D','Schlepping':'\u62D6\u62D6\u62C9\u62C9\u4E2D','Skedaddling':'\u6492\u817F\u5C31\u8DD1\u4E2D','Grooving':'\u5F8B\u52A8\u4E2D','Meandering':'\u8730\u8712\u524D\u884C\u4E2D','Moseying':'\u6E9C\u8FBE\u4E2D','Perambulating':'\u6563\u6B65\u4E2D','Galloping':'\u7B56\u9A6C\u5954\u817E\u4E2D','Scurrying':'\u6025\u5319\u5319\u4E2D','Slithering':'\u86C7\u884C\u4E2D','Pouncing':'\u731B\u6251\u4E2D','Burrowing':'\u6253\u6D1E\u4E2D','Spelunking':'\u63A2\u6D1E\u4E2D','Honking':'\u5600\u5600\u4E2D',
+'Clauding':'\u514B\u52B3\u4E01\u4E2D','Combobulating':'\u628A\u4E8B\u641E\u660E\u767D\u4E2D','Discombobulating':'\u628A\u4F60\u641E\u7CCA\u6D82\u4E2D','Recombobulating':'\u91CD\u65B0\u641E\u660E\u767D\u4E2D','Flibbertigibbeting':'\u53FD\u53FD\u559D\u559D\u4E2D','Boondoggling':'\u778E\u5FD9\u6D3B\u4E2D','Hullaballooing':'\u5927\u5435\u5927\u95F9\u4E2D','Shenaniganing':'\u641E\u6076\u4F5C\u5267\u4E2D','Tomfoolering':'\u72AF\u50BB\u4E2D','Razzle-dazzling':'\u773C\u82B1\u7F2D\u4E71\u4E2D','Razzmatazzing':'\u534E\u4E3D\u6574\u6D3B\u4E2D','Whatchamacalliting':'\u90A3\u4E2A\u5565\u6765\u7740','Dilly-dallying':'\u78E8\u78E8\u8E6D\u8E6D\u4E2D','Lollygagging':'\u65E0\u6240\u4E8B\u4E8B\u4E2D','Fiddle-faddling':'\u778E\u6446\u5F04\u4E2D','Befuddling':'\u4E00\u8138\u61F5\u4E2D','Flummoxing':'\u6574\u8499\u4E86\u4E2D','Canoodling':'\u4EB2\u4EB2\u62B1\u62B1\u4E2D','Smooshing':'\u63C9\u63C9\u634F\u634F\u4E2D','Booping':'\u561F\u561F\u4E2D','Wibbling':'\u6296\u6296\u6296\u4E2D','Topsy-turvying':'\u98A0\u5012\u4E7E\u5764\u4E2D',
+'Enchanting':'\u65BD\u9B54\u6CD5\u4E2D','Levitating':'\u60AC\u6D6E\u4E2D','Transfiguring':'\u53D8\u5F62\u4E2D','Transmuting':'\u70BC\u91D1\u4E2D','Hyperspacing':'\u8D85\u7A7A\u95F4\u8DF3\u8DC3\u4E2D','Prestidigitating':'\u53D8\u620F\u6CD5\u4E2D','Manifesting':'\u663E\u5316\u4E2D','Warping':'\u66F2\u901F\u98DE\u884C\u4E2D','Beaming':'\u4F20\u9001\u4E2D','Catapulting':'\u5F39\u5C04\u4E2D','Orbiting':'\u7ED5\u8F68\u8FD0\u884C\u4E2D','Quantumizing':'\u91CF\u5B50\u5316\u4E2D','Swooping':'\u4FEF\u51B2\u4E2D',
+'Crafting':'\u6253\u9020\u4E2D','Creating':'\u521B\u9020\u4E2D','Composing':'\u8C31\u5199\u4E2D','Computing':'\u8FD0\u7B97\u4E2D','Forging':'\u953B\u9020\u4E2D','Forming':'\u5851\u5F62\u4E2D','Generating':'\u751F\u6210\u4E2D','Architecting':'\u67B6\u6784\u4E2D','Bootstrapping':'\u81EA\u4E3E\u4E2D','Hashing':'\u54C8\u5E0C\u4E2D','Hatching':'\u5B75\u5316\u4E2D','Improvising':'\u5373\u5174\u53D1\u6325\u4E2D','Incubating':'\u5B75\u5316\u57F9\u80B2\u4E2D','Orchestrating':'\u7F16\u6392\u4E2D','Sketching':'\u7D20\u63CF\u4E2D','Tinkering':'\u6363\u9F13\u4E2D','Accomplishing':'\u641E\u5B9A\u4E2D','Actioning':'\u6267\u884C\u4E2D','Actualizing':'\u5B9E\u73B0\u4E2D','Effecting':'\u751F\u6548\u4E2D','Gitifying':'Git\u5316\u4E2D',
+'Cascading':'\u5C42\u53E0\u4E2D','Coalescing':'\u805A\u5408\u4E2D','Spinning':'\u65CB\u8F6C\u4E2D','Swirling':'\u6253\u65CB\u4E2D','Twisting':'\u626D\u66F2\u4E2D','Undulating':'\u8D77\u4F0F\u4E2D','Unfurling':'\u5C55\u5F00\u4E2D','Unravelling':'\u89E3\u5F00\u4E2D','Whirlpooling':'\u6F29\u6DA1\u4E2D','Whirring':'\u55E1\u55E1\u8F6C\u4E2D','Zigzagging':'\u66F2\u6298\u524D\u884C\u4E2D','Channeling':'\u5F15\u5BFC\u4E2D','Channelling':'\u5F15\u5BFC\u4E2D','Fluttering':'\u7FE9\u7FE9\u98DE\u821E\u4E2D','Infusing':'\u6CE8\u5165\u4E2D','Reticulating':'\u7F51\u683C\u5316\u4E2D','Billowing':'\u7FFB\u6D8C\u4E2D',
+'Doing':'\u505A\u4E8B\u4E2D','Working':'\u5DE5\u4F5C\u4E2D','Processing':'\u5904\u7406\u4E2D','Vibing':'\u611F\u53D7\u6C1B\u56F4\u4E2D','Wandering':'\u6F2B\u6E38\u4E2D','Doodling':'\u6D82\u9E26\u4E2D','Embellishing':'\u6DA6\u8272\u4E2D','Harmonizing':'\u548C\u8C10\u4E2D','Herding':'\u653E\u7267\u4E2D','Gesticulating':'\u6BD4\u624B\u753B\u811A\u4E2D','Mustering':'\u96C6\u7ED3\u4E2D','Newspapering':'\u770B\u62A5\u4E2D','Noodling':'\u778E\u7422\u78E8\u4E2D','Philosophising':'\u54F2\u5B66\u601D\u8FA8\u4E2D','Pontificating':'\u8BF4\u6559\u4E2D','Puttering':'\u78E8\u6D0B\u5DE5\u4E2D','Wrangling':'\u4E89\u8BBA\u4E2D'
+};
+
+const D=[
+  {icon:'\u{1F9E0}',th:'purple',en:'Serious Thinking',zh:'\u6B63\u7ECF\u601D\u8003',
+   f:['Thinking','Pondering','Contemplating','Cogitating','Ruminating','Puzzling','Envisioning','Calculating'],
+   w:['Thinking','Pondering','Contemplating','Considering','Deliberating','Cogitating','Ruminating','Musing','Mulling','Calculating','Deciphering','Inferring','Synthesizing','Determining','Elucidating','Cerebrating','Perusing','Puzzling','Ideating','Imagining','Envisioning']},
+  {icon:'\u{1F373}',th:'accent',en:'Cooking Metaphors',zh:'\u70F9\u996A\u6BD4\u55BB',
+   f:['Simmering','Marinating','Fermenting','Flamb\u00E9ing','Whisking','Caramelizing','Julienning','Zesting'],
+   w:['Baking','Brewing','Cooking','Simmering','Stewing','Marinating','Fermenting','Seasoning','Kneading','Leavening','Caramelizing','Garnishing','Julienning','Saut\u00E9ing','Flamb\u00E9ing','Frosting','Drizzling','Whisking','Zesting','Proofing','Tempering','Blanching','Concocting']},
+  {icon:'\u{1F33F}',th:'teal',en:'Nature & Science',zh:'\u81EA\u7136\u4E0E\u79D1\u5B66',
+   f:['Photosynthesizing','Pollinating','Crystallizing','Sublimating','Osmosing','Thundering','Sprouting','Nebulizing'],
+   w:['Photosynthesizing','Pollinating','Sprouting','Germinating','Crystallizing','Evaporating','Ionizing','Nucleating','Osmosing','Precipitating','Sublimating','Propagating','Cultivating','Nebulizing','Nesting','Roosting','Bloviating','Flowing','Ebbing','Gusting','Misting','Thundering']},
+  {icon:'\u{1F483}',th:'amber',en:'Quirky Moves',zh:'\u641E\u602A\u52A8\u4F5C',
+   f:['Moonwalking','Waddling','Skedaddling','Galloping','Spelunking','Scampering','Slithering','Boogieing'],
+   w:['Moonwalking','Boogieing','Jitterbugging','Sock-hopping','Shimmying','Frolicking','Gallivanting','Waddling','Scampering','Schlepping','Skedaddling','Grooving','Meandering','Moseying','Perambulating','Galloping','Scurrying','Slithering','Pouncing','Burrowing','Spelunking','Honking']},
+  {icon:'\u{1F92A}',th:'rose',en:'Pure Nonsense',zh:'\u7EAF\u65E0\u5398\u5934',
+   f:['Clauding','Discombobulating','Flibbertigibbeting','Razzle-dazzling','Whatchamacalliting','Lollygagging','Topsy-turvying','Booping'],
+   w:['Clauding','Combobulating','Discombobulating','Recombobulating','Flibbertigibbeting','Boondoggling','Hullaballooing','Shenaniganing','Tomfoolering','Razzle-dazzling','Razzmatazzing','Whatchamacalliting','Dilly-dallying','Lollygagging','Fiddle-faddling','Befuddling','Flummoxing','Canoodling','Smooshing','Booping','Wibbling','Topsy-turvying']},
+  {icon:'\u2728',th:'indigo',en:'Magic & Fantasy',zh:'\u9B54\u6CD5\u4E0E\u5947\u5E7B',
+   f:['Enchanting','Levitating','Hyperspacing','Prestidigitating','Transmuting','Quantumizing','Transfiguring','Swooping'],
+   w:['Enchanting','Levitating','Transfiguring','Transmuting','Hyperspacing','Prestidigitating','Manifesting','Warping','Beaming','Catapulting','Orbiting','Quantumizing','Swooping']},
+  {icon:'\u{1F527}',th:'green',en:'Making & Building',zh:'\u521B\u9020\u4E0E\u6784\u5EFA',
+   f:['Architecting','Forging','Orchestrating','Tinkering','Bootstrapping','Hatching','Gitifying','Improvising'],
+   w:['Crafting','Creating','Composing','Computing','Forging','Forming','Generating','Architecting','Bootstrapping','Hashing','Hatching','Improvising','Incubating','Orchestrating','Sketching','Tinkering','Accomplishing','Actioning','Actualizing','Effecting','Gitifying']},
+  {icon:'\u{1F300}',th:'brown',en:'Swirls & Flows',zh:'\u6F29\u6DA1\u4E0E\u6D41\u52A8',
+   f:['Cascading','Swirling','Undulating','Whirlpooling','Zigzagging','Fluttering','Unfurling','Billowing'],
+   w:['Cascading','Coalescing','Spinning','Swirling','Twisting','Undulating','Unfurling','Unravelling','Whirlpooling','Whirring','Zigzagging','Channeling','Channelling','Fluttering','Infusing','Reticulating','Billowing']},
+  {icon:'\u{1F3B2}',th:'gray',en:'Everything Else',zh:'\u5176\u4ED6',
+   f:['Vibing','Philosophising','Doodling','Herding','Noodling','Newspapering','Gesticulating','Wrangling'],
+   w:['Doing','Working','Processing','Vibing','Wandering','Doodling','Embellishing','Harmonizing','Herding','Gesticulating','Mustering','Newspapering','Noodling','Philosophising','Pontificating','Puttering','Wrangling']}
+];
+const A=D.flatMap(c=>c.w);
+
+// Spinner
+const sI=document.getElementById('spI'),sW=document.getElementById('spW'),
+  sZ=document.getElementById('spZ'),sD=document.getElementById('spD');
+const IC=['\u25D0','\u25D3','\u25D1','\u25D2'];
+let ii=0,si=null,ic=null;
+
+function spin(){
+  sD.classList.remove('on');sZ.style.opacity='0';
+  let c=0;const t=12+Math.floor(Math.random()*8);
+  ic=setInterval(()=>{ii=(ii+1)%4;sI.textContent=IC[ii]},150);
+  (function tk(){
+    const w=A[Math.floor(Math.random()*A.length)];
+    sW.textContent=w;sW.classList.remove('cyc');void sW.offsetWidth;sW.classList.add('cyc');c++;
+    if(c<t){si=setTimeout(tk,60+(c/t)*250)}
+    else{clearInterval(ic);sD.classList.add('on');sZ.textContent=Z[w]||'';sZ.style.opacity='1'}
+  })();
+}
+function showW(w){
+  clearTimeout(si);clearInterval(ic);
+  sW.textContent=w;sW.classList.remove('cyc');void sW.offsetWidth;sW.classList.add('cyc');
+  sD.classList.add('on');sZ.textContent=Z[w]||'';sZ.style.opacity='1';
+  ic=setInterval(()=>{ii=(ii+1)%4;sI.textContent=IC[ii]},150);
+  setTimeout(()=>clearInterval(ic),1500);
+}
+
+// Build slides
+const track=document.getElementById('track'),nav=document.getElementById('catNav');
+let cur=0;
+
+// Themed SVG decorations per category
+const SVG={
+  purple:[
+    `<svg viewBox="0 0 200 200"><circle cx="100" cy="100" r="80" fill="none" stroke="rgba(124,92,252,.25)" stroke-width="2"/><circle cx="100" cy="100" r="55" fill="none" stroke="rgba(124,92,252,.18)" stroke-width="1.5"/><circle cx="100" cy="100" r="30" fill="rgba(124,92,252,.08)"/></svg>`,
+    `<svg viewBox="0 0 200 200"><path d="M100 20 Q140 60 120 100 Q100 140 60 120 Q20 100 60 60 Q80 40 100 20Z" fill="rgba(124,92,252,.1)" stroke="rgba(124,92,252,.15)" stroke-width="1.5"/></svg>`
+  ],
+  accent:[
+    `<svg viewBox="0 0 200 200"><ellipse cx="100" cy="100" rx="90" ry="70" fill="none" stroke="rgba(232,97,60,.2)" stroke-width="2" stroke-dasharray="8 6"/><path d="M80 60 Q100 30 120 60 Q130 80 120 100 Q100 120 80 100 Q70 80 80 60Z" fill="rgba(232,97,60,.08)"/></svg>`,
+    `<svg viewBox="0 0 200 200"><path d="M40 100 C40 40 160 40 160 100 C160 160 40 160 40 100" fill="none" stroke="rgba(232,97,60,.15)" stroke-width="2"/><circle cx="100" cy="80" r="12" fill="rgba(232,97,60,.1)"/></svg>`
+  ],
+  teal:[
+    `<svg viewBox="0 0 200 200"><path d="M100 20 Q120 50 110 80 Q100 110 120 140 Q130 160 100 180" fill="none" stroke="rgba(0,150,136,.2)" stroke-width="2.5" stroke-linecap="round"/><path d="M100 60 Q130 70 120 100 Q110 130 100 120" fill="rgba(0,150,136,.08)"/><circle cx="80" cy="150" r="15" fill="rgba(0,150,136,.06)"/></svg>`,
+    `<svg viewBox="0 0 200 200"><path d="M60 180 Q70 120 90 100 Q110 80 100 40" fill="none" stroke="rgba(0,150,136,.15)" stroke-width="2" stroke-linecap="round"/><circle cx="100" cy="38" r="6" fill="rgba(0,150,136,.12)"/></svg>`
+  ],
+  amber:[
+    `<svg viewBox="0 0 200 200"><path d="M50 160 L80 100 L60 100 L100 30 L80 30 L120 0" fill="none" stroke="rgba(200,150,0,.2)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M130 170 Q140 140 120 120 Q110 100 130 80" fill="none" stroke="rgba(200,150,0,.15)" stroke-width="2" stroke-linecap="round"/></svg>`,
+    `<svg viewBox="0 0 200 200"><ellipse cx="100" cy="120" rx="60" ry="25" fill="none" stroke="rgba(200,150,0,.15)" stroke-width="1.5" stroke-dasharray="4 4"/><path d="M70 120 Q100 60 130 120" fill="rgba(200,150,0,.06)"/></svg>`
+  ],
+  rose:[
+    `<svg viewBox="0 0 200 200"><path d="M30 100 Q60 30 100 60 Q140 30 170 100 Q140 170 100 140 Q60 170 30 100Z" fill="rgba(220,60,100,.06)" stroke="rgba(220,60,100,.15)" stroke-width="1.5"/></svg>`,
+    `<svg viewBox="0 0 200 200"><circle cx="80" cy="80" r="40" fill="none" stroke="rgba(220,60,100,.12)" stroke-width="1.5"/><circle cx="130" cy="110" r="30" fill="none" stroke="rgba(220,60,100,.1)" stroke-width="1.5"/><circle cx="90" cy="130" r="20" fill="rgba(220,60,100,.05)"/></svg>`
+  ],
+  indigo:[
+    `<svg viewBox="0 0 200 200"><polygon points="100,20 120,75 180,75 130,110 150,170 100,135 50,170 70,110 20,75 80,75" fill="rgba(90,70,200,.06)" stroke="rgba(90,70,200,.15)" stroke-width="1.5"/></svg>`,
+    `<svg viewBox="0 0 200 200"><circle cx="60" cy="60" r="4" fill="rgba(90,70,200,.2)"/><circle cx="140" cy="50" r="3" fill="rgba(90,70,200,.15)"/><circle cx="100" cy="100" r="5" fill="rgba(90,70,200,.12)"/><circle cx="50" cy="140" r="3" fill="rgba(90,70,200,.18)"/><circle cx="150" cy="130" r="4" fill="rgba(90,70,200,.14)"/><path d="M60 60 L140 50 L100 100 L150 130 M100 100 L50 140" fill="none" stroke="rgba(90,70,200,.08)" stroke-width="1"/></svg>`
+  ],
+  green:[
+    `<svg viewBox="0 0 200 200"><circle cx="100" cy="100" r="60" fill="none" stroke="rgba(60,140,60,.15)" stroke-width="2"/><line x1="100" y1="40" x2="100" y2="160" stroke="rgba(60,140,60,.1)" stroke-width="1.5"/><line x1="40" y1="100" x2="160" y2="100" stroke="rgba(60,140,60,.1)" stroke-width="1.5"/><rect x="75" y="75" width="50" height="50" rx="4" fill="rgba(60,140,60,.05)" stroke="rgba(60,140,60,.1)" stroke-width="1"/></svg>`,
+    `<svg viewBox="0 0 200 200"><path d="M60 140 L100 60 L140 140" fill="none" stroke="rgba(60,140,60,.15)" stroke-width="2" stroke-linejoin="round"/><line x1="75" y1="110" x2="125" y2="110" stroke="rgba(60,140,60,.12)" stroke-width="1.5"/></svg>`
+  ],
+  brown:[
+    `<svg viewBox="0 0 200 200"><path d="M100 20 A80 80 0 0 1 180 100" fill="none" stroke="rgba(160,100,40,.15)" stroke-width="2.5" stroke-linecap="round"/><path d="M180 100 A80 80 0 0 1 100 180" fill="none" stroke="rgba(160,100,40,.12)" stroke-width="2" stroke-linecap="round"/><path d="M100 180 A80 80 0 0 1 20 100" fill="none" stroke="rgba(160,100,40,.09)" stroke-width="1.5" stroke-linecap="round"/><circle cx="100" cy="100" r="20" fill="rgba(160,100,40,.06)"/></svg>`,
+    `<svg viewBox="0 0 200 200"><path d="M50 100 Q100 20 150 100 Q100 180 50 100Z" fill="none" stroke="rgba(160,100,40,.12)" stroke-width="1.5"/></svg>`
+  ],
+  gray:[
+    `<svg viewBox="0 0 200 200"><rect x="40" y="40" width="120" height="120" rx="20" fill="none" stroke="rgba(100,90,80,.12)" stroke-width="1.5" stroke-dasharray="6 4"/><rect x="70" y="70" width="60" height="60" rx="10" fill="rgba(100,90,80,.04)" stroke="rgba(100,90,80,.08)" stroke-width="1"/></svg>`,
+    `<svg viewBox="0 0 200 200"><circle cx="70" cy="70" r="25" fill="none" stroke="rgba(100,90,80,.1)" stroke-width="1.5"/><circle cx="140" cy="130" r="20" fill="none" stroke="rgba(100,90,80,.08)" stroke-width="1"/></svg>`
+  ]
+};
+
+D.forEach((c,i)=>{
+  const tab=document.createElement('button');
+  tab.className='cat-tab'+(i===0?' active':'');
+  tab.textContent=c.icon;tab.title=c.en;tab.onclick=()=>go(i);
+  nav.appendChild(tab);
+
+  const rest=c.w.filter(w=>!c.f.includes(w));
+  const sv=SVG[c.th]||SVG.gray;
+  const s=document.createElement('div');
+  s.className='slide';s.dataset.theme=c.th;
+  s.innerHTML=`
+    <div class="deco deco-a">${sv[0]}</div>
+    <div class="deco deco-b">${sv[1]}</div>
+    <div class="slide-inner">
+      <div class="slide-header">
+        <div class="slide-icon">${c.icon}</div>
+        <div class="slide-title">${c.en}</div>
+        <div class="slide-sub">
+          <span class="slide-zh">${c.zh}</span>
+          <span class="slide-badge">${c.w.length} words</span>
+        </div>
+      </div>
+      <div class="feat-grid">
+        ${c.f.map(w=>`
+          <div class="feat-card" onclick="showW('${w.replace(/'/g,"\\'")}')">
+            <span class="fc-e">${E[w]||''}</span>
+            <div class="fc-t">
+              <span class="fc-en">${w}</span>
+              <span class="fc-zh">${Z[w]||''}</span>
+            </div>
+          </div>`).join('')}
+      </div>
+      ${rest.length?`
+        <button class="drawer-btn" onclick="togD(this)">
+          Show all ${c.w.length} words
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="m6 9 6 6 6-6"/></svg>
+        </button>
+        <div class="drawer">
+          ${c.w.map(w=>`<span class="mpill" onclick="showW('${w.replace(/'/g,"\\'")}')">
+            <span class="me">${E[w]||''}</span>${w}<span class="mz">${Z[w]||''}</span>
+          </span>`).join('')}
+        </div>`:''}
+    </div>`;
+  track.appendChild(s);
+});
+
+const pgInfo=document.getElementById('pgInfo');
+function go(i){
+  cur=Math.max(0,Math.min(i,D.length-1));
+  track.style.transform=`translateX(-${cur*100}%)`;
+  nav.querySelectorAll('.cat-tab').forEach((t,j)=>t.classList.toggle('active',j===cur));
+  document.getElementById('pBtn').disabled=cur===0;
+  document.getElementById('nBtn').disabled=cur===D.length-1;
+  pgInfo.textContent=`${cur+1} / ${D.length}`;
+}
+document.getElementById('pBtn').onclick=()=>go(cur-1);
+document.getElementById('nBtn').onclick=()=>go(cur+1);
+go(0);
+
+let tx=0;
+track.addEventListener('touchstart',e=>{tx=e.touches[0].clientX},{passive:true});
+track.addEventListener('touchend',e=>{const d=e.changedTouches[0].clientX-tx;if(Math.abs(d)>50)go(cur+(d>0?-1:1))});
+document.addEventListener('keydown',e=>{
+  if(document.getElementById('sOv').classList.contains('open'))return;
+  if(e.key==='ArrowLeft')go(cur-1);if(e.key==='ArrowRight')go(cur+1);
+});
+
+function togD(b){
+  const d=b.nextElementSibling,o=d.classList.toggle('open');
+  b.classList.toggle('open',o);
+  b.childNodes[0].textContent=o?'Hide extras ':'Show all '+d.querySelectorAll('.mpill').length+' words ';
+}
+
+// Search
+const sOv=document.getElementById('sOv'),sIn=document.getElementById('sIn'),
+  sRe=document.getElementById('sRe'),sCt=document.getElementById('sCt');
+const SD=D.flatMap(c=>c.w.map(w=>({w,zh:Z[w]||'',em:E[w]||'',cat:c.zh})));
+
+function openS(){sOv.classList.add('open');setTimeout(()=>sIn.focus(),50);renS('')}
+function closeS(){sOv.classList.remove('open');sIn.value=''}
+
+document.getElementById('sTrig').onclick=openS;
+document.getElementById('sCl').onclick=closeS;
+sOv.addEventListener('click',e=>{if(e.target===sOv)closeS()});
+document.addEventListener('keydown',e=>{
+  if((e.ctrlKey||e.metaKey)&&e.key==='k'){e.preventDefault();openS()}
+  if(e.key==='Escape'&&sOv.classList.contains('open'))closeS();
+});
+sIn.addEventListener('input',()=>renS(sIn.value));
+
+function renS(q){
+  q=q.trim().toLowerCase();
+  const m=q?SD.filter(d=>d.w.toLowerCase().includes(q)||d.zh.includes(q)):SD;
+  sCt.textContent=q?`${m.length} of 176 match "${q}"`:'176 words \u2014 type English or Chinese';
+  if(!m.length){sRe.innerHTML='<div class="s-empty"><div class="be">\u{1F914}</div>No matches</div>';return}
+  sRe.innerHTML=m.map(d=>`
+    <div class="sr-c" onclick="showW('${d.w.replace(/'/g,"\\'")}');closeS()">
+      <span class="re">${d.em}</span>
+      <span class="rn">${q?d.w.replace(new RegExp('('+q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','gi'),'<mark>$1</mark>'):d.w}</span>
+      <span class="rz">${d.zh}</span>
+      <span class="rc">${d.cat}</span>
+    </div>`).join('');
+}
+</script>
+</body>
+</html>
