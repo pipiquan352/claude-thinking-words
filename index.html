@@ -305,6 +305,31 @@ footer a{color:#e8613c;text-decoration:none}
 }
 .slide[data-theme=egg] .feat-card:nth-child(even):hover{transform:translateY(-4px) rotate(1deg)}
 
+/* Explorer counter */
+.counter{
+  display:flex;align-items:center;gap:.5rem;
+  padding:.3rem .8rem;border-radius:100px;
+  background:rgba(45,36,32,.05);font-size:.72rem;color:#8a7e76;
+  font-weight:500;transition:all .3s;
+}
+.counter .c-num{
+  font-weight:700;color:#e8613c;font-size:.8rem;
+  font-family:'Space Mono',monospace;min-width:1.6em;text-align:right;
+}
+.counter .c-bar{
+  width:60px;height:5px;border-radius:3px;background:rgba(45,36,32,.08);overflow:hidden;
+}
+.counter .c-fill{
+  height:100%;border-radius:3px;width:0%;
+  background:linear-gradient(90deg,#e8613c,#7c5cfc);
+  transition:width .4s cubic-bezier(.4,0,.15,1);
+}
+.counter.done{background:rgba(124,92,252,.1);color:#7c5cfc}
+.counter.done .c-num{color:#7c5cfc}
+.trophy{display:none;font-size:.85rem;animation:pop .4s cubic-bezier(.17,.67,.21,1.27)}
+.counter.done .trophy{display:inline}
+@keyframes pop{0%{transform:scale(0)}60%{transform:scale(1.3)}100%{transform:scale(1)}}
+
 @media(max-width:600px){
   .controls{gap:.6rem}
   .spinner-box{width:min(55vw,240px);height:72px}
@@ -333,6 +358,11 @@ footer a{color:#e8613c;text-decoration:none}
     <div class="sp-zh" id="spZ">&#x514B;&#x52B3;&#x4E01;&#x4E2D;</div>
   </div>
   <button class="btn btn-spin" onclick="spin()">Spin</button>
+  <div class="counter" id="ctr">
+    <span class="c-num" id="cNum">0</span>/<span>184</span>
+    <div class="c-bar"><div class="c-fill" id="cFill"></div></div>
+    <span class="trophy">🏆</span>
+  </div>
   <button class="btn btn-search" id="sTrig">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg>
     Search <kbd>Ctrl+K</kbd>
@@ -426,6 +456,18 @@ const D=[
 ];
 const A=D.flatMap(c=>c.w);
 
+// Explorer counter
+const seen=new Set();
+const cNum=document.getElementById('cNum'),cFill=document.getElementById('cFill'),ctr=document.getElementById('ctr');
+const TOTAL=A.length;
+function markSeen(w){
+  if(seen.has(w))return;
+  seen.add(w);
+  cNum.textContent=seen.size;
+  cFill.style.width=(seen.size/TOTAL*100)+'%';
+  if(seen.size>=TOTAL)ctr.classList.add('done');
+}
+
 // Spinner
 const sI=document.getElementById('spI'),sW=document.getElementById('spW'),
   sZ=document.getElementById('spZ'),sD=document.getElementById('spD');
@@ -440,13 +482,13 @@ function spin(){
     const w=A[Math.floor(Math.random()*A.length)];
     sW.textContent=w;sW.classList.remove('cyc');void sW.offsetWidth;sW.classList.add('cyc');c++;
     if(c<t){si=setTimeout(tk,60+(c/t)*250)}
-    else{clearInterval(ic);sD.classList.add('on');sZ.textContent=Z[w]||'';sZ.style.opacity='1'}
+    else{clearInterval(ic);sD.classList.add('on');sZ.textContent=Z[w]||'';sZ.style.opacity='1';markSeen(w)}
   })();
 }
 function showW(w){
   clearTimeout(si);clearInterval(ic);
   sW.textContent=w;sW.classList.remove('cyc');void sW.offsetWidth;sW.classList.add('cyc');
-  sD.classList.add('on');sZ.textContent=Z[w]||'';sZ.style.opacity='1';
+  sD.classList.add('on');sZ.textContent=Z[w]||'';sZ.style.opacity='1';markSeen(w);
   ic=setInterval(()=>{ii=(ii+1)%4;sI.textContent=IC[ii]},150);
   setTimeout(()=>clearInterval(ic),1500);
 }
