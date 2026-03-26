@@ -305,6 +305,18 @@ footer a{color:#e8613c;text-decoration:none}
 }
 .slide[data-theme=egg] .feat-card:nth-child(even):hover{transform:translateY(-4px) rotate(1deg)}
 
+/* Milestone toast */
+.toast{
+  position:fixed;top:-60px;left:50%;transform:translateX(-50%);
+  padding:.5rem 1.2rem;border-radius:100px;
+  background:#2d2420;color:#f5f0eb;font-size:.82rem;font-weight:600;
+  display:flex;align-items:center;gap:.5rem;
+  box-shadow:0 8px 30px rgba(0,0,0,.15);z-index:300;
+  transition:top .4s cubic-bezier(.4,0,.15,1);white-space:nowrap;
+}
+.toast.show{top:1rem}
+.toast .t-em{font-size:1.2rem}
+
 /* Explorer counter */
 .counter{
   display:flex;align-items:center;gap:.5rem;
@@ -381,6 +393,7 @@ footer a{color:#e8613c;text-decoration:none}
   <button class="arrow" id="nBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="m9 18 6-6-6-6"/></svg></button>
 </div>
 
+<div class="toast" id="toast"><span class="t-em"></span><span class="t-msg"></span></div>
 <footer>Extracted from <a href="https://github.com/anthropics">@anthropic-ai/claude-code</a> cli.js by ππ</footer>
 
 <!-- Search -->
@@ -456,16 +469,43 @@ const D=[
 ];
 const A=D.flatMap(c=>c.w);
 
-// Explorer counter
+// Explorer counter + milestones
 const seen=new Set();
 const cNum=document.getElementById('cNum'),cFill=document.getElementById('cFill'),ctr=document.getElementById('ctr');
+const toast=document.getElementById('toast'),tEm=toast.querySelector('.t-em'),tMsg=toast.querySelector('.t-msg');
 const TOTAL=A.length;
+const MS=[
+  [10,'🌱','初来乍到 — 刚热身呢！'],
+  [20,'☕','小有收获 — 来杯咖啡继续'],
+  [30,'🔥','渐入佳境 — 停不下来了吧'],
+  [40,'🎯','眼光精准 — 已探索四分之一'],
+  [50,'⭐','半百达成 — 你是认真的！'],
+  [60,'🚀','加速中 — 根本停不下来'],
+  [70,'🧙','词汇魔法师 — 快一半了'],
+  [80,'💎','淘金达人 — 好词尽收眼底'],
+  [90,'🌈','彩虹猎人 — 即将过半'],
+  [100,'💯','破百！— 真·词汇收藏家'],
+  [120,'🔮','深入秘境 — 大部分词都认识你了'],
+  [140,'👑','词汇贵族 — 所剩无几！'],
+  [160,'🏅','几乎全收 — 最后冲刺！'],
+  [184,'🏆','全部集齐！！你是传说！']
+];
+let toastTimer=null;
+function showToast(em,msg){
+  tEm.textContent=em;tMsg.textContent=msg;
+  toast.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>toast.classList.remove('show'),2500);
+}
 function markSeen(w){
   if(seen.has(w))return;
   seen.add(w);
-  cNum.textContent=seen.size;
-  cFill.style.width=(seen.size/TOTAL*100)+'%';
-  if(seen.size>=TOTAL)ctr.classList.add('done');
+  const n=seen.size;
+  cNum.textContent=n;
+  cFill.style.width=(n/TOTAL*100)+'%';
+  if(n>=TOTAL)ctr.classList.add('done');
+  const m=MS.find(x=>x[0]===n);
+  if(m)showToast(m[1],m[2]);
 }
 
 // Spinner
