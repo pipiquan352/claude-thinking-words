@@ -883,6 +883,15 @@ D.forEach((c,i)=>{
 
 const pgInfo=document.getElementById('pgInfo');
 function go(i){
+  // Close any open drawers before switching
+  track.querySelectorAll('.drawer.open').forEach(d=>{
+    d.classList.remove('open');
+    const b=d.previousElementSibling;
+    if(b&&b.classList.contains('drawer-btn')){
+      b.classList.remove('open');
+      b.childNodes[0].textContent='Show all '+d.querySelectorAll('.mpill').length+' words ';
+    }
+  });
   cur=Math.max(0,Math.min(i,D.length-1));
   track.style.transform=`translateX(-${cur*100}%)`;
   nav.querySelectorAll('.cat-tab').forEach((t,j)=>t.classList.toggle('active',j===cur));
