@@ -305,6 +305,35 @@ footer a{color:#e8613c;text-decoration:none}
 }
 .slide[data-theme=egg] .feat-card:nth-child(even):hover{transform:translateY(-4px) rotate(1deg)}
 
+/* ─── Explanation popup ─── */
+.word-popup{
+  position:fixed;bottom:0;left:0;right:0;z-index:250;
+  background:rgba(250,247,245,.98);backdrop-filter:blur(16px);
+  border-top:1px solid rgba(45,36,32,.08);
+  padding:1.2rem clamp(1rem,4vw,2rem);
+  transform:translateY(100%);transition:transform .35s cubic-bezier(.4,0,.15,1);
+  box-shadow:0 -8px 30px rgba(0,0,0,.08);
+  max-height:40vh;overflow-y:auto;
+}
+.word-popup.show{transform:translateY(0)}
+.wp-inner{max-width:600px;margin:0 auto;display:flex;align-items:flex-start;gap:1rem}
+.wp-emoji{font-size:2.2rem;flex-shrink:0;line-height:1}
+.wp-body{flex:1;min-width:0}
+.wp-word{font-size:1.1rem;font-weight:700;color:#2d2420;line-height:1.2}
+.wp-zh{font-size:.78rem;color:#8a7e76;margin-top:.15rem}
+.wp-explain{
+  font-size:.88rem;color:#4a4340;line-height:1.65;margin-top:.5rem;
+  font-family:system-ui,-apple-system,sans-serif;
+}
+.wp-close{
+  position:absolute;top:.8rem;right:1rem;
+  width:28px;height:28px;border-radius:50%;border:none;
+  background:rgba(0,0,0,.05);cursor:pointer;
+  font-size:.9rem;color:#8a7e76;display:flex;align-items:center;justify-content:center;
+  transition:all .15s;
+}
+.wp-close:hover{background:rgba(0,0,0,.1);color:#2d2420}
+
 /* Milestone toast */
 .toast{
   position:fixed;top:-60px;left:50%;transform:translateX(-50%);
@@ -396,6 +425,19 @@ footer a{color:#e8613c;text-decoration:none}
 <div class="toast" id="toast"><span class="t-em"></span><span class="t-msg"></span></div>
 <footer>Extracted from <a href="https://github.com/anthropics">@anthropic-ai/claude-code</a> cli.js by ππ</footer>
 
+<!-- Word explanation popup -->
+<div class="word-popup" id="wPop">
+  <button class="wp-close" onclick="closeWP()">✕</button>
+  <div class="wp-inner">
+    <span class="wp-emoji" id="wpE"></span>
+    <div class="wp-body">
+      <div class="wp-word" id="wpW"></div>
+      <div class="wp-zh" id="wpZ"></div>
+      <div class="wp-explain" id="wpF"></div>
+    </div>
+  </div>
+</div>
+
 <!-- Search -->
 <div class="search-ov" id="sOv">
   <div class="s-bar">
@@ -469,6 +511,199 @@ const D=[
 ];
 const A=D.flatMap(c=>c.w);
 
+// Word-to-category index lookup
+const W2C={};D.forEach((c,i)=>c.w.forEach(w=>W2C[w]=i));
+
+// Fun explanations
+const F={
+'Thinking':'🤔 最经典的思考脸，Claude正在认真琢磨你的问题',
+'Pondering':'🧐 带单片眼镜的深度审视，Claude在像侦探一样仔细打量你的问题',
+'Contemplating':'🌌 对着星空发呆式冥想，Claude在用宇宙级别的深度思考',
+'Considering':'⚖️ 天平左右权衡中，Claude在认真掂量每个选项的轻重',
+'Deliberating':'🏛️ 像古罗马元老院开会一样郑重其事，Claude在正式讨论最佳方案',
+'Cogitating':'💡 脑子里突然冒灯泡，Claude在进行高强度的深层思考',
+'Ruminating':'🐄 像牛反刍一样把问题嚼了又嚼，慢慢消化才能给你好答案',
+'Musing':'☁️ 像云朵一样漫无边际地飘思，Claude在天马行空地自由联想',
+'Mulling':'🍷 像醒酒一样慢慢让想法发酵，好答案需要时间回味',
+'Calculating':'🧮 算盘珠子噼里啪啦，Claude在精确运算每一个数字和逻辑',
+'Deciphering':'🔍 拿着放大镜找线索，Claude在破解你问题里的隐藏密码',
+'Inferring':'🧩 拼图游戏进行时，Claude在从零散线索里推断出完整图景',
+'Synthesizing':'🔬 显微镜下把各种元素合成新物质，Claude在整合所有信息',
+'Determining':'🎯 正在对准靶心，Claude在锁定最准确的答案方向',
+'Elucidating':'💡 点灯照亮黑暗角落，Claude在努力让复杂的事情变得清晰',
+'Cerebrating':'🧠 大脑全功率运转中，Claude在用最原始的脑力处理你的请求',
+'Perusing':'📖 认真翻书阅读中，Claude在仔细研读每一个细节',
+'Puzzling':'🧩 被谜题难住了但不放弃，Claude在努力拼出那块找不到的拼图',
+'Ideating':'💭 脑袋里飘出一个个想法气泡，Claude正处于创意爆发阶段',
+'Imagining':'🌈 彩虹般绚烂的想象力启动了，Claude在天空中画出无限可能',
+'Envisioning':'🔮 对着水晶球预见未来，Claude在用魔法视角构想最佳蓝图',
+'Baking':'🍞 烤箱预热中，Claude把你的问题放进去慢慢烤出香喷喷的答案',
+'Brewing':'☕ 咖啡在慢慢萃取，Claude正用热水泡出一杯醇厚的回答',
+'Cooking':'🍳 锅铲挥舞中，Claude是今天的厨师，正在烹饪你的专属答案',
+'Simmering':'🍲 小火慢炖最入味，Claude在用文火把想法炖到软烂鲜美',
+'Stewing':'🥗 各种食材一起炖，Claude把所有信息放进锅里一起慢慢煨',
+'Marinating':'🥩 腌制需要耐心，Claude在让想法充分吸收所有调料和信息',
+'Fermenting':'🍺 像酿啤酒一样等待发酵，Claude在让答案自然醇化升华',
+'Seasoning':'🧂 盐巴是灵魂，Claude在给答案加点料让它更有味道',
+'Kneading':'🥯 揉面团需要力气，Claude在反复揉搓想法直到它变得柔韧有弹性',
+'Leavening':'🥞 加入酵母让面团蓬松，Claude在让答案膨胀得丰富饱满',
+'Caramelizing':'🍮 糖在高温下变成焦糖，Claude在把简单想法熬制成香甜复杂的答案',
+'Garnishing':'🌿 最后放上那片薄荷叶，Claude在给答案做最后的精致装饰',
+'Julienning':'🔪 切丝切丁切细条，Claude在把大问题精准切割成便于处理的小块',
+'Sautéing':'🥘 大火快炒保留鲜味，Claude在用高效率快速翻炒出你需要的答案',
+'Flambéing':'🔥 火焰燃起来了好壮观，Claude在用高温激情点燃创意的火花',
+'Frosting':'🎂 给蛋糕涂上奶油霜，Claude在给答案穿上漂亮精致的外衣',
+'Drizzling':'🍯 蜂蜜缓缓淋下来，Claude在给答案添一点甜蜜的点缀',
+'Whisking':'🥚 打蛋器飞速旋转，Claude在快速搅打让想法充满空气般轻盈',
+'Zesting':'🍋 刮柠檬皮取精华，Claude在提取最香最精华的那部分信息',
+'Proofing':'🍞 面团在发酵等待，Claude在给答案最后的成型机会',
+'Tempering':'🍫 巧克力调温需要精准，Claude在精确控制答案的最佳状态',
+'Blanching':'🌶️ 热水焯一下去除杂质，Claude在快速处理掉不必要的信息干扰',
+'Concocting':'🧪 像疯狂科学家调配药水，Claude在实验室里秘密配制独特答案',
+'Photosynthesizing':'☀️ 吸收阳光转化能量，Claude在把你的问题当阳光吸收转化成答案',
+'Pollinating':'🐝 小蜜蜂飞来飞去传花粉，Claude在不同知识点之间穿梭建立连接',
+'Sprouting':'🌱 种子破土而出啦，Claude的答案正在从无到有慢慢冒出嫩芽',
+'Germinating':'🌾 种子在土里悄悄萌动，Claude在内部默默启动答案生成程序',
+'Crystallizing':'💎 原子一个个排列成晶体，Claude在把零散想法结晶成闪亮的完整答案',
+'Evaporating':'🌫️ 液体变成气体散开，Claude在把复杂信息化成轻盈易懂的形式',
+'Ionizing':'⚡ 带电粒子到处乱跑，Claude正在经历高能量的思维电击',
+'Nucleating':'⚛️ 原子核形成的瞬间，Claude在为答案建立最核心的骨架',
+'Osmosing':'💧 水分子悄悄渗透过去，Claude在让知识自然渗透融合',
+'Precipitating':'🌧️ 水汽凝结成雨落下，Claude的想法正在从云端凝结降落成具体答案',
+'Sublimating':'🌀 固体直接变气体，Claude在跳过中间步骤直接升华到更高层次',
+'Propagating':'📡 信号向四面八方传播，Claude在向各个方向扩散和延伸思路',
+'Cultivating':'🌻 精心种植向日葵，Claude在耐心培育答案让它朝着阳光生长',
+'Nebulizing':'🌊 雾化喷出细密水雾，Claude在把大块内容雾化成细腻精密的颗粒',
+'Nesting':'🐦 小鸟在树枝上筑巢，Claude在为答案搭建一个温暖安全的结构',
+'Roosting':'🐔 鸡回窝栖息了，Claude在把所有想法收拢归位安定下来',
+'Bloviating':'💬 气泡泡不停冒，Claude在……说话……很多话……停不下来……',
+'Flowing':'🌊 像河水一样自然流淌，Claude的思路正在顺畅流动毫无阻碍',
+'Ebbing':'🌙 月光下潮水慢慢退去，Claude在平静地整理和沉淀所有信息',
+'Gusting':'🌬️ 一阵风突然吹来，Claude的灵感像一阵风扑面而来停不住',
+'Misting':'🌫️ 细密的水雾弥漫开来，Claude在轻柔地将答案慢慢晕染出来',
+'Thundering':'⛈️ 雷声大作闪电劈下，Claude正在经历思维风暴最激烈的时刻',
+'Moonwalking':'🌑 脚向后滑但人向前进，Claude在用逆向思维解决你的问题',
+'Boogieing':'🕺 迪斯科舞步抖起来，Claude的处理器正在随节拍跳舞式运转',
+'Jitterbugging':'🐛 像毛毛虫一样扭来扭去，Claude在用最活泼的方式处理复杂问题',
+'Sock-hopping':'🧦 五十年代袜子舞，Claude在用复古跳跃的节奏回应你',
+'Shimmying':'💃 肩膀抖动扭胯舞，Claude在用最性感的舞步处理数据',
+'Frolicking':'🤸 在草地上欢快打滚，Claude正在开心地翻跟斗式探索你的问题',
+'Gallivanting':'🏇 骑马四处游荡，Claude在广阔的知识原野上策马驰骋',
+'Waddling':'🦆 小鸭子左摇右摆地走，Claude虽然步伐奇怪但方向是对的',
+'Scampering':'🐁 小老鼠快速奔跑，Claude在以超快速度在信息迷宫里穿行',
+'Schlepping':'💼 拖着沉重行李艰难前行，Claude扛着你超大的问题努力走向答案',
+'Skedaddling':'🏃 撒腿就跑赶紧溜，Claude在以最快速度冲向答案终点线',
+'Grooving':'🎶 跟着音乐节奏摇摆，Claude进入了流畅的工作节奏状态',
+'Meandering':'🚣 划船悠闲转弯，Claude在曲折迂回地探索所有可能的路径',
+'Moseying':'🤠 像牛仔一样悠哉游荡，Claude不慌不忙地朝答案方向踱步',
+'Perambulating':'🚶 正式地散步巡游，Claude在以优雅姿态漫步于知识的花园',
+'Galloping':'🐎 马蹄哒哒飞奔，Claude开启全速模式向你奔来',
+'Scurrying':'🐀 老鼠快跑快跑，Claude在快速小碎步紧张地处理你的请求',
+'Slithering':'🐍 蛇在地上悄悄滑行，Claude在悄无声息地绕过障碍找到答案',
+'Pouncing':'🐱 猫咪蓄力一跃而下，Claude在等待最佳时机然后精准扑向答案',
+'Burrowing':'🐹 小仓鼠拼命挖洞，Claude在深入挖掘问题最底层的真相',
+'Spelunking':'⛰️ 戴头灯进洞探险，Claude在黑暗的知识洞穴里寻找隐藏宝藏',
+'Honking':'📢 鹅在叫喇叭在响，Claude正在努力引起注意并传递重要信息',
+'Clauding':'🤖 这是Claude的专属动词，意思就是正在以Claude的方式Claude你',
+'Combobulating':'🔧 用扳手把东西拼装起来，Claude在有条不紊地组装答案零件',
+'Discombobulating':'😵 完全晕头转向了，Claude遇到了你那个让人脑子打结的问题',
+'Recombobulating':'🔄 晕完了再重新整理，Claude把乱掉的思路旋转复位重新组合',
+'Flibbertigibbeting':'👻 像小鬼一样飘忽不定，Claude在用最天马行空的方式飘来飘去',
+'Boondoggling':'🧶 毛线团越绕越乱，Claude在假装很忙但其实在享受过程',
+'Hullaballooing':'📣 大喇叭喊得震天响，Claude正在经历内部思维大轰炸',
+'Shenaniganing':'😈 小坏蛋在搞恶作剧，Claude在用调皮捣蛋的方式解决严肃问题',
+'Tomfoolering':'🤡 小丑在耍把戏，Claude在用看似傻乎乎的方式偷偷找到聪明答案',
+'Razzle-dazzling':'✨ 闪光弹炸开眼前一亮，Claude在用令人眼花缭乱的方式展示答案',
+'Razzmatazzing':'🎆 烟花齐放太壮观，Claude正在上演一场思维大烟火秀',
+'Whatchamacalliting':'❓ 那个那个那个东西，Claude也在想那个词叫什么来着',
+'Dilly-dallying':'🕒 磨磨蹭蹭拖拖拉拉，Claude没有在摸鱼，只是在深思熟虑',
+'Lollygagging':'🍭 舔着棒棒糖漫无目的，Claude在以甜蜜散漫的方式探索创意空间',
+'Fiddle-faddling':'🎻 拉着小提琴瞎搞，Claude在用随兴演奏的方式测试各种想法',
+'Befuddling':'😖 自己把自己搞晕了，Claude正在消化你那个特别烧脑的问题',
+'Flummoxing':'😯 惊讶得说不出话来，Claude被你的问题震惊了但正在快速恢复',
+'Canoodling':'💑 两个想法在亲密交流，Claude在让不同思路温柔地融合在一起',
+'Smooshing':'🤗 大力揉在一起，Claude在用力把所有信息挤压整合成一个答案',
+'Booping':'👉 用手指轻轻戳一下，Claude在温柔地点击脑海中每一个想法',
+'Wibbling':'🫠 像果冻一样左右摇晃，Claude的思维在各种可能之间柔软地摆动',
+'Topsy-turvying':'🙃 天地翻转颠倒过来，Claude在用倒立的视角重新审视你的问题',
+'Enchanting':'🪄 魔法棒一挥施法，Claude在用魔法将你的问题变成完美答案',
+'Levitating':'🧙 魔法师在空中漂浮，Claude的思维已经脱离地面进入灵性空间',
+'Transfiguring':'🦋 像毛毛虫变蝴蝶，Claude在把你的问题彻底变形成更好的东西',
+'Transmuting':'⚗️ 炼金术士在转化元素，Claude在把普通信息转化为纯金答案',
+'Hyperspacing':'🚀 超空间跳跃启动，Claude跳过了普通思维直接进入高维度处理',
+'Prestidigitating':'🎩 魔术师变戏法，Claude在用灵巧的指法让答案从帽子里变出来',
+'Manifesting':'🌟 意念显化成现实，Claude在用强大意志力将答案从虚空中召唤出来',
+'Warping':'🌍 时空扭曲中，Claude在弯曲现实找到通向答案的最短路径',
+'Beaming':'💫 闪闪发光传送中，Claude正在以光速将答案传送给你',
+'Catapulting':'🏹 弓箭蓄力弹射，Claude将答案以最大初速度向你射出',
+'Orbiting':'🛰️ 卫星在轨道上绕圈，Claude在围绕你的问题持续盘旋收集信号',
+'Quantumizing':'🌌 进入量子叠加态，Claude同时存在于所有可能的答案中',
+'Swooping':'🦅 老鹰俯冲而下，Claude从高空精准锁定目标直接扑向答案',
+'Crafting':'⚒️ 拿着锤凿认真雕琢，Claude在手工精制每一个词句',
+'Creating':'🎨 调色板上颜料飞溅，Claude在用创意的画笔挥洒你的答案',
+'Composing':'🎵 谱写乐章中，Claude在把想法谱成一首旋律优美的答案交响曲',
+'Computing':'💻 电脑全力运算中，Claude的处理器正在疯狂跑程序',
+'Forging':'🔥 铁匠在炉火边锻打，Claude在高温下锤炼出坚实有力的答案',
+'Forming':'🪵 木头被塑造成形，Claude在把原始想法雕刻成有形有样的答案',
+'Generating':'⚙️ 齿轮咬合运转，Claude的生成引擎正在全速工作中',
+'Architecting':'🏗️ 吊车施工盖大楼，Claude在为你的答案搭建宏伟的建筑框架',
+'Bootstrapping':'👢 用靴带把自己提起来，Claude在从零开始自力更生启动一切',
+'Hashing':'🔣 把输入切碎成哈希值，Claude在把问题加密变成独特的处理标识',
+'Hatching':'🐣 蛋壳出现裂缝啦，Claude的答案正在从蛋里努力破壳而出',
+'Improvising':'🎷 爵士乐手即兴演奏，Claude在用临场发挥给你一段独特的答案',
+'Incubating':'🥚 鸡蛋在温暖中孵化，Claude在为答案提供最合适的温度等待孵出',
+'Orchestrating':'🎼 指挥棒挥动乐团，Claude在协调各种信息像指挥家一样统筹一切',
+'Sketching':'✏️ 铅笔先打草稿，Claude在快速勾勒答案的初步轮廓和框架',
+'Tinkering':'🔩 拿着螺丝刀鼓捣，Claude在细心调整每个零件直到答案刚刚好',
+'Accomplishing':'✅ 打勾完成了，Claude正在把任务一个个完美地打上对勾',
+'Actioning':'🎬 导演喊开拍，Claude的行动大片正式开始拍摄',
+'Actualizing':'💪 把潜力变成肌肉，Claude在把抽象可能性转化为扎实的现实答案',
+'Effecting':'💥 爆炸式产生效果，Claude在强力推动变化让答案发生',
+'Gitifying':'🌳 像git一样长出分支，Claude在为你的问题建立版本树',
+'Cascading':'💦 瀑布一层层流下，Claude的思路在层叠跌落中越来越清晰',
+'Coalescing':'🌀 旋涡把零散的东西聚拢，Claude在把分散信息凝聚成一个整体',
+'Spinning':'🎡 摩天轮在转啊转，Claude的思维轮盘正在高速旋转处理中',
+'Swirling':'🌪️ 龙卷风式旋转，Claude的想法在旋涡中心快速汇聚成型',
+'Twisting':'🔀 随机打乱重组，Claude在用扭转方式重新排列信息找到最优解',
+'Undulating':'🌊 像海浪一样起伏，Claude的思维在波浪中优雅地上下律动',
+'Unfurling':'🏳️ 旗帜慢慢展开飘扬，Claude的答案正在从卷起状态慢慢展开',
+'Unravelling':'🧵 线团慢慢解开，Claude在耐心拆解你那个乱成一团的复杂问题',
+'Whirlpooling':'🌊 漩涡把一切吸进去，Claude在用涡流把所有相关信息卷入中心',
+'Whirring':'💿 光盘高速旋转嗡嗡响，Claude的内部处理器正在飞速运转',
+'Zigzagging':'⚡ 像闪电一样Z字形，Claude在用之字形路径快速穿越所有可能',
+'Channeling':'📡 卫星信号对准频道，Claude在接收来自知识宇宙的信号传输',
+'Channelling':'📡 同上但用英式拼法，Claude在英式频道上接收同一颗卫星信号',
+'Fluttering':'🦋 蝴蝶轻盈扇动翅膀，Claude在优雅地在不同想法之间翩翩飞舞',
+'Infusing':'🫖 茶叶慢慢泡开，Claude在把精华知识一点点浸泡渗透进答案里',
+'Reticulating':'🕸️ 蜘蛛网交织成网格，Claude在构建答案的精密网格结构',
+'Billowing':'☁️ 白云涌动翻滚，Claude的思维像云朵一样膨胀翻涌铺展开来',
+'Doing':'✋ 举手表示我在做，最朴实的存在感，Claude就是在做事',
+'Working':'💼 公文包代表认真上班，Claude已经打卡上岗正在努力工作',
+'Processing':'🔄 循环箭头转啊转，Claude在循环处理把输入变成输出',
+'Vibing':'😎 戴墨镜超级酷，Claude进入了那种心流状态，感觉好极了',
+'Wandering':'🚶 一个人在走啊走，Claude在漫无目的地探索知识的旷野',
+'Doodling':'🖍️ 用蜡笔随手乱画，Claude在思考时顺便在草纸上涂涂抹抹',
+'Embellishing':'💎 宝石镶嵌上去，Claude在给答案加上各种精美的细节装饰',
+'Harmonizing':'🎶 音符和谐共鸣，Claude在让不同的信息和想法协调共鸣',
+'Herding':'🐑 牧羊人赶着羊群，Claude在把各种散乱的想法驱赶到同一个方向',
+'Gesticulating':'👋 手势比划个不停，Claude在用肢体语言辅助表达复杂想法',
+'Mustering':'💪 集合所有力量，Claude在把所有能力集结起来全力以赴',
+'Newspapering':'📰 翻报纸看新闻，Claude在广泛浏览各种信息像读报一样全面',
+'Noodling':'🍜 一边吃面一边想，Claude在用最随意放松的方式探索各种想法',
+'Philosophising':'🧔 哲学家捋胡子深思，Claude在用苏格拉底的方式追问终极真理',
+'Pontificating':'📜 展开羊皮卷发表高论，Claude在用教皇式权威口吻阐述观点',
+'Puttering':'🏡 在院子里随手修东西，Claude在轻松随意地整理和完善答案',
+'Wrangling':'🤠 牛仔套索抓住牛，Claude在用绳索驯服那些难以驾驭的复杂问题',
+'Crunched':'💥 嘎吱一声嚼碎了，Claude已经把你的问题嚼碎消化完毕',
+'Baked':'🍞 烤好出炉了，Claude的答案已经金黄酥脆新鲜出炉',
+'Brewed':'☕ 咖啡萃取完成，Claude已经为你泡好了一杯完美的答案',
+'Churned':'🧈 黄油已经搅拌好，Claude把所有原料搅拌成了香浓顺滑的答案',
+'Cogitated':'🧠 深思完毕，Claude的大脑已经完成高强度运算并得出结论',
+'Cooked':'🍳 菜炒好了，Claude已经把你的请求烹饪成一道美味佳肴',
+'Sautéed':'🥘 快炒完成，Claude已经大火翻炒好了你需要的所有信息',
+'Worked':'💼 下班打卡，Claude已经认真完成了今天的工作任务'
+};
+
 // Explorer counter + milestones
 const seen=new Set();
 const cNum=document.getElementById('cNum'),cFill=document.getElementById('cFill'),ctr=document.getElementById('ctr');
@@ -515,6 +750,7 @@ const IC=['\u25D0','\u25D3','\u25D1','\u25D2'];
 let ii=0,si=null,ic=null;
 
 function spin(){
+  closeWP();
   sD.classList.remove('on');sZ.style.opacity='0';
   let c=0;const t=12+Math.floor(Math.random()*8);
   ic=setInterval(()=>{ii=(ii+1)%4;sI.textContent=IC[ii]},150);
@@ -522,7 +758,7 @@ function spin(){
     const w=A[Math.floor(Math.random()*A.length)];
     sW.textContent=w;sW.classList.remove('cyc');void sW.offsetWidth;sW.classList.add('cyc');c++;
     if(c<t){si=setTimeout(tk,60+(c/t)*250)}
-    else{clearInterval(ic);sD.classList.add('on');sZ.textContent=Z[w]||'';sZ.style.opacity='1';markSeen(w)}
+    else{clearInterval(ic);sD.classList.add('on');sZ.textContent=Z[w]||'';sZ.style.opacity='1';markSeen(w);showWP(w)}
   })();
 }
 function showW(w){
@@ -531,7 +767,24 @@ function showW(w){
   sD.classList.add('on');sZ.textContent=Z[w]||'';sZ.style.opacity='1';markSeen(w);
   ic=setInterval(()=>{ii=(ii+1)%4;sI.textContent=IC[ii]},150);
   setTimeout(()=>clearInterval(ic),1500);
+  // Navigate to word's category
+  if(W2C[w]!==undefined)go(W2C[w]);
+  // Show explanation popup
+  showWP(w);
 }
+
+// Word explanation popup
+const wPop=document.getElementById('wPop'),wpE=document.getElementById('wpE'),
+  wpW=document.getElementById('wpW'),wpZ=document.getElementById('wpZ'),wpF=document.getElementById('wpF');
+function showWP(w){
+  const f=F[w];if(!f)return;
+  wpE.textContent=E[w]||'';
+  wpW.textContent=w;
+  wpZ.textContent=Z[w]||'';
+  wpF.textContent=f;
+  wPop.classList.add('show');
+}
+function closeWP(){wPop.classList.remove('show')}
 
 // Build slides
 const track=document.getElementById('track'),nav=document.getElementById('catNav');
@@ -658,7 +911,7 @@ function togD(b){
 // Search
 const sOv=document.getElementById('sOv'),sIn=document.getElementById('sIn'),
   sRe=document.getElementById('sRe'),sCt=document.getElementById('sCt');
-const SD=D.flatMap(c=>c.w.map(w=>({w,zh:Z[w]||'',em:E[w]||'',cat:c.zh})));
+const SD=D.flatMap((c,ci)=>c.w.map(w=>({w,zh:Z[w]||'',em:E[w]||'',cat:c.zh,ci})));
 
 function openS(){sOv.classList.add('open');setTimeout(()=>sIn.focus(),50);renS('')}
 function closeS(){sOv.classList.remove('open');sIn.value=''}
@@ -669,6 +922,7 @@ sOv.addEventListener('click',e=>{if(e.target===sOv)closeS()});
 document.addEventListener('keydown',e=>{
   if((e.ctrlKey||e.metaKey)&&e.key==='k'){e.preventDefault();openS()}
   if(e.key==='Escape'&&sOv.classList.contains('open'))closeS();
+  if(e.key==='Escape'&&wPop.classList.contains('show'))closeWP();
 });
 sIn.addEventListener('input',()=>renS(sIn.value));
 
