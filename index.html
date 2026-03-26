@@ -383,7 +383,7 @@ footer a{color:#e8613c;text-decoration:none}
 <body>
 
 <section class="hero">
-  <div class="hero-badge">source: cli.js v2.1.79 &middot; 190 words + 11 retired</div>
+  <div class="hero-badge">source: cli.js v2.1.79 &middot; 191 words + 8 easter eggs + 2 retired</div>
   <h1>Claude Code's <span class="hl">Secret Words</span></h1>
   <p>When Claude thinks, it picks from <em>188 delightful words</em>. Tap to explore each one.</p>
 </section>
@@ -487,7 +487,7 @@ const D=[
    w:['Baking','Brewing','Cooking','Simmering','Stewing','Marinating','Fermenting','Seasoning','Kneading','Leavening','Caramelizing','Garnishing','Julienning','Frosting','Drizzling','Whisking','Zesting','Proofing','Tempering','Blanching','Concocting','Bunning','Churning']},
   {icon:'\u{1F33F}',th:'teal',en:'Nature & Science',zh:'\u81EA\u7136\u4E0E\u79D1\u5B66',
    f:['Photosynthesizing','Pollinating','Crystallizing','Sublimating','Osmosing','Symbioting','Sprouting','Metamorphosing'],
-   w:['Photosynthesizing','Pollinating','Sprouting','Germinating','Crystallizing','Evaporating','Ionizing','Nucleating','Osmosing','Precipitating','Sublimating','Propagating','Cultivating','Nebulizing','Nesting','Roosting','Bloviating','Flowing','Ebbing','Gusting','Misting','Metamorphosing','Percolating','Pruning','Symbioting']},
+   w:['Photosynthesizing','Pollinating','Sprouting','Germinating','Crystallizing','Evaporating','Ionizing','Nucleating','Osmosing','Precipitating','Sublimating','Propagating','Cultivating','Nebulizing','Nesting','Roosting','Bloviating','Flowing','Ebbing','Gusting','Misting','Thundering','Metamorphosing','Percolating','Pruning','Symbioting']},
   {icon:'\u{1F483}',th:'amber',en:'Quirky Moves',zh:'\u641E\u602A\u52A8\u4F5C',
    f:['Moonwalking','Waddling','Skedaddling','Galloping','Spelunking','Choreographing','Roaming','Boogieing'],
    w:['Moonwalking','Boogieing','Jitterbugging','Sock-hopping','Shimmying','Frolicking','Gallivanting','Waddling','Scampering','Schlepping','Skedaddling','Grooving','Meandering','Moseying','Perambulating','Galloping','Scurrying','Slithering','Pouncing','Burrowing','Spelunking','Honking','Choreographing','Roaming','Ascending']},
@@ -506,9 +506,9 @@ const D=[
   {icon:'\u{1F3B2}',th:'gray',en:'Everything Else',zh:'\u5176\u4ED6',
    f:['Vibing','Philosophising','Doodling','Herding','Noodling','Newspapering','Gesticulating','Wrangling'],
    w:['Doing','Working','Processing','Vibing','Wandering','Doodling','Embellishing','Harmonizing','Herding','Gesticulating','Mustering','Newspapering','Noodling','Philosophising','Pontificating','Puttering','Wrangling','Pivoting']},
-  {icon:'\u{1F47B}',th:'egg',en:'Retired Words',zh:'已退役 · 曾经的秘密词',
-   f:['Saut\u00E9ing','Flamb\u00E9ing','Thundering','Baked','Brewed','Churned','Cogitated','Cooked','Crunched','Saut\u00E9ed','Worked'],
-   w:['Saut\u00E9ing','Flamb\u00E9ing','Thundering','Baked','Brewed','Churned','Cogitated','Cooked','Crunched','Saut\u00E9ed','Worked'],bonus:true}
+  {icon:'\u{1F9E9}',th:'egg',en:'Easter Eggs & Retired',zh:'彩蛋与退役词',
+   f:['Baked','Brewed','Churned','Cogitated','Cooked','Crunched','Saut\u00E9ed','Worked'],
+   w:['Baked','Brewed','Churned','Cogitated','Cooked','Crunched','Saut\u00E9ed','Worked','Saut\u00E9ing','Flamb\u00E9ing'],bonus:true}
 ];
 const A=D.flatMap(c=>c.w);
 
@@ -883,7 +883,7 @@ D.forEach((c,i)=>{
             </div>
           </div>`).join('')}
       </div>
-      ${c.bonus?'<div class="bonus-note"><strong>退役名单 👻</strong> 这些词曾经出现在 Claude Code 的 spinner 里，但在 v2.1.79 中被移除了。其中过去式的词（Baked、Brewed 等）是 Claude 思考<strong>完成后</strong>的总结用词，Sautéing、Flambéing、Thundering 则是从主力阵容中光荣退役 🫡</div>':''}
+      ${c.bonus?'<div class="bonus-note"><strong>彩蛋!</strong> 过去式的词（Baked、Brewed 等）是 Claude 思考<strong>完成后</strong>的总结用词 🍳 而 Sautéing 和 Flambéing 已在 v2.1.79 中光荣退役 🫡</div>':''}
       ${rest.length?`
         <button class="drawer-btn" onclick="togD(this)">
           Show all ${c.w.length} words
